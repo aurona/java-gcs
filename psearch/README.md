@@ -27,7 +27,7 @@ detailed instructions.
 
     mvn appengine:deploy
 
-## Testing
+## Compiling and Testing
 
     mvn verify
 
