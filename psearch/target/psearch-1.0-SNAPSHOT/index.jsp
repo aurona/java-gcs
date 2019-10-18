@@ -7,7 +7,7 @@
   <title>Hello App Engine Standard Java 8</title>
 </head>
 <body>
-    <h1>pSearch: Cloud Search demo</h1>
+    <h1>pSearch: Cloud Search deeeemo</h1>
 
   <p>This is <%= HelloAppEngine.getInfo() %>.</p>
   <table>

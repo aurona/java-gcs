@@ -12,14 +12,5 @@ See the [Google Cloud Search APIs][gcs-apis] for more detailed instructions.
 * [Indexing API](https://developers.google.com/cloud-search/docs/reference/rest/v1/indexing.datasources)
 
 ## Maven
-### Running locally
-
-    mvn appengine:run
-
-### Deploying
-
-    mvn appengine:deploy
-
-## Compiling and Testing
-
-    mvn verify
+Deploy: mvn appengine:deploy
+Compiling and Testing: mvn verify
