@@ -13,7 +13,7 @@ import java.sql.SQLException; // PHS: For connecting to Cloud SQL.
 
 //*** PHS: Servlet init for /init ***
 @SuppressWarnings("serial")
-@WebServlet(name = "init", value="/initphs")
+@WebServlet(name = "init", value="/initphs2")
 public class init extends HttpServlet {
 
     // PHS: Init method to create Cloud SQL connection 
