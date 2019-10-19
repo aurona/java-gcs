@@ -7,9 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Connection; // PHS: For connecting to Cloud SQL.
-import java.sql.DriverManager; // PHS: For connecting to Cloud SQL.
-import java.sql.SQLException; // PHS: For connecting to Cloud SQL.
+import java.sql.Connection; // PHS: For connecting to Cloud SQL
+import java.sql.DriverManager; // PHS: For connecting to Cloud SQL
+import java.sql.SQLException; // PHS: For connecting to Cloud SQL
 
 //*** PHS: Servlet init for /init ***
 @SuppressWarnings("serial")
