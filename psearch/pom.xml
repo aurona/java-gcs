@@ -29,11 +29,26 @@
       <artifactId>appengine-api-1.0-sdk</artifactId>
       <version>1.9.59</version>
     </dependency>
+
+    <!-- PHS: Not sure which ones are really needed -->
     <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-docs</artifactId>
-      <version>v1-rev29-1.25.0</version>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client</artifactId>
+        <version>1.30.2</version>
     </dependency>
+    <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-docs</artifactId>
+        <version>v1-rev29-1.25.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-cloudsearch -->
+    <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-cloudsearch</artifactId>
+        <version>v1-rev31-1.25.0</version>
+    </dependency>
+
+   
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
