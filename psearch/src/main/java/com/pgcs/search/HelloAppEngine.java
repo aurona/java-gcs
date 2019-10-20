@@ -7,14 +7,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// PHS: My demo server classes
-import com.pgcs.server.Query;
-import com.pgcs.server.PSchema;
+import java.util.logging.Logger;
 
 //*** PHS: Servlet HelloAppEngine for /hello ***
 @WebServlet(name = "HelloAppEngine", value = "/hello")
 public class HelloAppEngine extends HttpServlet {
+  private static final Logger log = Logger.getLogger(HelloAppEngine.class.getName());
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -22,19 +20,23 @@ public class HelloAppEngine extends HttpServlet {
 
     Properties properties = System.getProperties();
 
+    log.info("PHS: HelloAppEngine servlet INFO IN");
+
     // PHS: Test 1: Call to static Query::Test()
     String ret = Query.Test();
 
     // PHS: Test 2: Call to PSchema::getSchema(dataSourceId)
     String dataSourceId = "c1daac23a76ec19dde99fa6eaa35e3da";
     PSchema schema = new PSchema();
-    schema.getSchema(dataSourceId);
+    String schemastr = schema.getSchema(dataSourceId);
 
     // PHS: Just print some results from previous tests.
     response.setContentType("text/plain");
     response.getWriter().println("Hello App Engine - Standard using "
         + SystemProperty.version.get() + " Java " + properties.get("java.specification.version")
-        + " RESPONSE: " + ret);
+        + " RESPONSE: "
+        + "\n Test 1: " + ret
+        + "\n Test 2: " + schemastr);
   }
 
   public static String getInfo() {

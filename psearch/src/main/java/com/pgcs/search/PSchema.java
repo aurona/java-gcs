@@ -1,4 +1,4 @@
-package com.pgcs.server;
+package com.pgcs.search;
 
 // PHS: cloud search api imports
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -20,18 +20,23 @@ public class PSchema {
     * Retrieves the schema for a datasource.
     * @param dataSourceId Unique ID of the datasource.
     */
-    public void getSchema(String dataSourceId) {
+    public String getSchema(String dataSourceId) {
+        String schemastr = "";
+
         try {
             CloudSearch cloudSearch = buildAuthorizedClient();
             String resourceName = String.format("datasources/%s", dataSourceId);
             Schema schema = cloudSearch.indexing().datasources().getSchema(resourceName).execute();
-            System.out.println(schema.toPrettyString());
+            schemastr = schema.toPrettyString();
+            System.out.println(schemastr);
         } catch (GoogleJsonResponseException e) {
-            System.err.println("Unable to delete schema: " + e.getDetails());
+            System.err.println("Unable to get schema: " + e.getDetails());
         } catch (IOException e) {
-            System.err.println("Unable to delete schema: " + e.getMessage());
+            System.err.println("Unable to get schema: " + e.getMessage());
         }
       
+      return schemastr;
+
     } // Of getSchema
 
     /**

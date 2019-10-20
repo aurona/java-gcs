@@ -1,4 +1,4 @@
-package com.pgcs.server;
+package com.pgcs.search;
 
 import java.io.IOException;
 
