@@ -59,6 +59,11 @@ public class GCSSchema {
             // Original: UploadRequest.UpdateSchemaRequest updateRequest = new UploadRequest.UpdateSchemaRequest();
             UpdateSchemaRequest updateRequest = new UpdateSchemaRequest();
 
+            Schema schema;
+            schema = cloudSearch.getObjectParser().parseAndClose(schemastr, Schema.class);
+            
+            updateRequest.setSchema(schema);
+
             Operation operation = cloudSearch.indexing().datasources().updateSchema(resourceName, updateRequest).execute();
             GCSUtils.log("AFTER updateSchema:execute");
         } catch (GoogleJsonResponseException e) {
