@@ -1,5 +1,11 @@
 package com.pgcs.search;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+// PHS: Other imports
+import java.io.IOException;
+import java.util.Collections;
+
 // PHS: cloud search api imports
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -9,15 +15,12 @@ import com.google.api.services.cloudsearch.v1.model.Operation;
 import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
-import com.google.enterprise.cloudsearch.sdk.CredentialFactory;
-import com.google.enterprise.cloudsearch.sdk.indexing.IndexingService.RequestMode;
-//import com.google.enterprise.cloudsearch.sdk.indexing.util.Uploader.UploaderHelper;
 
-// PHS: Other imports
-import java.io.IOException;
-import java.util.Collections;
 
 public class GCSSchema {
+
+    public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
+
 
     /**
     * Retrieves the schema for a datasource.
@@ -49,30 +52,56 @@ public class GCSSchema {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchema(String dataSourceId) {
-        String schemastr = "{ \"fruit\": \"Apple\", \"size\": \"Large\", \"color\": \"Red\" }";
 
         try {
+            // Authenticating Service Account
             CloudSearch cloudSearch = buildAuthorizedClient();
+
             String resourceName = String.format("datasources/%s", dataSourceId);
-
-            // Prepare the new schema: class UpdateSchemaRequest
-            // Original: UploadRequest.UpdateSchemaRequest updateRequest = new UploadRequest.UpdateSchemaRequest();
-            UpdateSchemaRequest updateRequest = new UpdateSchemaRequest();
-
             Schema schema;
-            schema = cloudSearch.getObjectParser().parseAndClose(schemastr, Schema.class);
-            
-            updateRequest.setSchema(schema);
 
-            Operation operation = cloudSearch.indexing().datasources().updateSchema(resourceName, updateRequest).execute();
+            GCSUtils.log("UPDATE 1");
+            try (BufferedReader br = new BufferedReader(new FileReader("./schema.json"))) {
+                schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
+            } // end try
+
+            GCSUtils.log("UPDATE 2");
+
+            UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
+
+            GCSUtils.log("UPDATE 3");
+
+            Operation operation = cloudSearch.indexing().datasources()
+                .updateSchema(resourceName, updateSchemaRequest)
+                .execute();
             GCSUtils.log("AFTER updateSchema:execute");
+
+            // This Operation is not syncronous. We have to wait and see when it finishes
+            while (operation.getDone() == null || operation.getDone() == false) {
+                // Wait before polling again
+                Thread.sleep(OPERATION_POLL_INTERVAL);
+                operation = cloudSearch.operations().get(operation.getName()).execute();
+            } // end while
+
+            // Operation is complete, check result
+            Status error = operation.getError();
+            if (error != null) {
+                System.err.println("Error updating schema:" + error.getMessage());
+            } else {
+                System.out.println("Schema updated.");
+            }
+
+
         } catch (GoogleJsonResponseException e) {
-            System.err.println("Unable to get schema: " + e.getDetails());
+        System.err.println("Unable to update schema: " + e.getDetails());
         } catch (IOException e) {
-            System.err.println("Unable to get schema: " + e.getMessage());
+        System.err.println("Unable to update schema: " + e.getMessage());
+        } catch (InterruptedException e) {
+        System.err.println("Interrupted while waiting for schema update: "
+            + e.getMessage());
         }
-      
-      return schemastr;
+
+      return "whatever";
 
     } // end getSchema
 
