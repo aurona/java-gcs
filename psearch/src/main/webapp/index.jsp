@@ -7,14 +7,15 @@
   <title>Hello App Engine Standard Java 8</title>
 </head>
 <body>
-    <h1>pSearch: Cloud Search demo</h1>
+    <h1>Cloud Search tests</h1>
 
   <table>
     <tr>
-      <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
+      <td colspan="2" style="font-weight:bold;">Available Tests:</td>
     </tr>
     <tr>
-      <td><a href='/hello'>GCSController</a></td>
+      <td><a href='/hello?order=getschema'>Get Schema</a></td>
+      <td><a href='/hello?order=updateschema'>update Schema</a></td>
     </tr>
   </table>
 

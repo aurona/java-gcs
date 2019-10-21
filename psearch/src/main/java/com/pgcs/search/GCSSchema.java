@@ -49,7 +49,7 @@ public class GCSSchema {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchema(String dataSourceId) {
-        String schemastr = "{ 'fruit': 'Apple', 'size': 'Large', 'color': 'Red' }";
+        String schemastr = "{ \"fruit\": \"Apple\", \"size\": \"Large\", \"color\": \"Red\" }";
 
         try {
             CloudSearch cloudSearch = buildAuthorizedClient();
