@@ -14,7 +14,7 @@ import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 import java.io.IOException;
 import java.util.Collections;
 
-public class PSchema {
+public class GCSSchema {
 
     /**
     * Retrieves the schema for a datasource.
@@ -24,20 +24,27 @@ public class PSchema {
         String schemastr = "";
 
         try {
+            GCSUtils.log("paso 1");
             CloudSearch cloudSearch = buildAuthorizedClient();
+            GCSUtils.log("paso 2");
             String resourceName = String.format("datasources/%s", dataSourceId);
+            GCSUtils.log("paso 3 - " + resourceName);
             Schema schema = cloudSearch.indexing().datasources().getSchema(resourceName).execute();
+            GCSUtils.log("paso 4");
             schemastr = schema.toPrettyString();
+            GCSUtils.log("paso 5 - " + schemastr);
             System.out.println(schemastr);
         } catch (GoogleJsonResponseException e) {
+            GCSUtils.log("paso 6");
             System.err.println("Unable to get schema: " + e.getDetails());
         } catch (IOException e) {
+            GCSUtils.log("paso 7");
             System.err.println("Unable to get schema: " + e.getMessage());
         }
       
       return schemastr;
 
-    } // Of getSchema
+    } // end getSchema
 
     /**
     * Builds and initializes the client with service account credentials.
@@ -61,8 +68,8 @@ public class PSchema {
         Utils.getDefaultTransport(),
         Utils.getDefaultJsonFactory(),
         credential)
-        .setApplicationName("Cloud Search Samples")
+        .setApplicationName("default") // PHS: Name of Search Application with access to DataSource
         .build();
   }
 
-} // Of class
+} // end class

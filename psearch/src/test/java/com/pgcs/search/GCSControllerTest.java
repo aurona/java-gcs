@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Unit tests for {@link HelloAppEngine}.
+ * Unit tests for {@link GCSController}.
  */
 @RunWith(JUnit4.class)
-public class HelloAppEngineTest {
+public class GCSControllerTest {
   private static final String FAKE_URL = "fake.fk/hello";
   // Set up a helper so that the ApiProxy returns a valid environment for local testing.
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
@@ -31,7 +31,7 @@ public class HelloAppEngineTest {
   @Mock private HttpServletRequest mockRequest;
   @Mock private HttpServletResponse mockResponse;
   private StringWriter responseWriter;
-  private HelloAppEngine servletUnderTest;
+  private GCSController servletUnderTest;
 
   @Before
   public void setUp() throws Exception {
@@ -45,7 +45,7 @@ public class HelloAppEngineTest {
     responseWriter = new StringWriter();
     when(mockResponse.getWriter()).thenReturn(new PrintWriter(responseWriter));
 
-    servletUnderTest = new HelloAppEngine();
+    servletUnderTest = new GCSController();
   }
 
   @After public void tearDown() {
@@ -58,15 +58,8 @@ public class HelloAppEngineTest {
 
     // We expect our hello world response.
     assertThat(responseWriter.toString())
-        .named("HelloAppEngine response")
-        .contains("Hello App Engine - Standard ");
+        .named("GCSController response")
+        .contains("GCSController Test OK");
   }
 
-  @Test
-  public void helloInfoTest() {
-    String result = HelloAppEngine.getInfo();
-    assertThat(result)
-      .named("HelloInfo.getInfo")
-      .containsMatch("^Version:\\s+.+OS:\\s+.+User:\\s");
-  }
-}
+} // end class
