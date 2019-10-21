@@ -8,34 +8,42 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//*** PHS: Servlet HelloAppEngine for /hello ***
+// *** Servlet HelloAppEngine for /hello ***
 @WebServlet(name = "GCSController", value = "/hello")
 public class GCSController extends HttpServlet {
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
 
-    Properties properties = System.getProperties(); // PHS: Only for testing
+        Properties properties = System.getProperties(); // PHS: Only for testing
+        String result = "";
 
-    // Parameters in call URL
-    String param1 = request.getParameter("param");
- 
+        // Parameters in call URL
+        String order = request.getParameter("order");
+        if (order == null) order = "test";
+        GCSUtils.log("GCSController: Order: " + order);
 
-    GCSUtils.log("PHS: HelloAppEngine servlet INFO TEST WITH static class");
+        // Depending on the order, we make the call
+        switch (order) {
+            case "getschema":
+                result = getSchema();
+                GCSUtils.log("AFTER getSchema: " + result);
+                break;
+            default:
+                break;
+        } // end switch
 
-    // PHS: Test Call to GCSSchema::getSchema(dataSourceId)
-    String dataSourceId = "c1daac23a76ec19dde99fa6eaa35e3da";
-    GCSSchema schema = new GCSSchema();
-    String schemastr = schema.getSchema(dataSourceId);
+        response.setContentType("text/plain");
+        response.getWriter().println("GCSController response [GCSController Test OK]");
 
-    // PHS: Just print some results from previous tests.
-    response.setContentType("text/plain");
-    response.getWriter().println("GCSController response [GCSController Test OK]: " + schemastr);
-    // For JUnit testing. If includes 'GCSController Test OK', test result will be ok
+    } // end doGet
 
-  } // end doGet
-
+    private String getSchema() {
+        String dataSourceId = "c1daac23a76ec19dde99fa6eaa35e3da"; // Test
+        GCSSchema schema = new GCSSchema();
+        return schema.getSchema(dataSourceId);
+    } // end getSchema
 
 } // Of GCSController
 

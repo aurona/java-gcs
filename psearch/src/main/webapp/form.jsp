@@ -5,7 +5,7 @@
     Create a new blog post
   </h2>
 
-  <form method="POST" action="/create">
+  <form method="POST" action="/hello">
 
     <div>
       <label for="title">Title</label>

@@ -24,16 +24,13 @@ public class GCSSchema {
         String schemastr = "";
 
         try {
-            GCSUtils.log("paso 1");
             CloudSearch cloudSearch = buildAuthorizedClient();
-            GCSUtils.log("paso 2");
             String resourceName = String.format("datasources/%s", dataSourceId);
-            GCSUtils.log("paso 3 - " + resourceName);
+            GCSUtils.log("getSchema:ResourceName: " + resourceName);
             Schema schema = cloudSearch.indexing().datasources().getSchema(resourceName).execute();
-            GCSUtils.log("paso 4");
+            GCSUtils.log("AFTER getSchema:ResourceName: ");
             schemastr = schema.toPrettyString();
-            GCSUtils.log("paso 5 - " + schemastr);
-            System.out.println(schemastr);
+            GCSUtils.log("AFTER schema.toPrettyString");
         } catch (GoogleJsonResponseException e) {
             GCSUtils.log("paso 6");
             System.err.println("Unable to get schema: " + e.getDetails());
