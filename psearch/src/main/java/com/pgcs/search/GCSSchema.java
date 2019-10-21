@@ -9,6 +9,9 @@ import com.google.api.services.cloudsearch.v1.model.Operation;
 import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
+import com.google.enterprise.cloudsearch.sdk.CredentialFactory;
+import com.google.enterprise.cloudsearch.sdk.indexing.IndexingService.RequestMode;
+//import com.google.enterprise.cloudsearch.sdk.indexing.util.Uploader.UploaderHelper;
 
 // PHS: Other imports
 import java.io.IOException;
@@ -43,6 +46,7 @@ public class GCSSchema {
     /**
     * Updates the schema of a datasource.
     * @param dataSourceId Unique ID of the datasource.
+    * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchema(String dataSourceId) {
         String schemastr = "{ 'fruit': 'Apple', 'size': 'Large', 'color': 'Red' }";
@@ -50,10 +54,13 @@ public class GCSSchema {
         try {
             CloudSearch cloudSearch = buildAuthorizedClient();
             String resourceName = String.format("datasources/%s", dataSourceId);
-            Schema schema = cloudSearch.indexing().datasources().updateSchema(resourceName).execute();
-            GCSUtils.log("AFTER getSchema:execute");
-            schemastr = schema.toPrettyString();
-            GCSUtils.log("AFTER schema.toPrettyString:" + schemastr);
+
+            // Prepare the new schema: class UpdateSchemaRequest
+            // Original: UploadRequest.UpdateSchemaRequest updateRequest = new UploadRequest.UpdateSchemaRequest();
+            UpdateSchemaRequest updateRequest = new UpdateSchemaRequest();
+
+            Operation operation = cloudSearch.indexing().datasources().updateSchema(resourceName, updateRequest).execute();
+            GCSUtils.log("AFTER updateSchema:execute");
         } catch (GoogleJsonResponseException e) {
             System.err.println("Unable to get schema: " + e.getDetails());
         } catch (IOException e) {

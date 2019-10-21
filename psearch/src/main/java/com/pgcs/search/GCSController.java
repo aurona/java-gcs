@@ -30,6 +30,10 @@ public class GCSController extends HttpServlet {
                 result = getSchema();
                 GCSUtils.log("AFTER getSchema: " + result);
                 break;
+            case "updateschema":
+                result = updateSchema();
+                GCSUtils.log("AFTER updateSchema: " + result);
+                break;
             default:
                 break;
         } // end switch
@@ -44,6 +48,12 @@ public class GCSController extends HttpServlet {
         GCSSchema schema = new GCSSchema();
         return schema.getSchema(dataSourceId);
     } // end getSchema
+
+    private String updateSchema() {
+        String dataSourceId = "c1daac23a76ec19da2795a7d778054c8"; // Test
+        GCSSchema schema = new GCSSchema();
+        return schema.updateSchema(dataSourceId);
+    } // end updateSchema
 
 } // Of GCSController
 
