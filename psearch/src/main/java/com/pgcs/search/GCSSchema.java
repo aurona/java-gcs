@@ -28,7 +28,7 @@ public class GCSSchema {
             String resourceName = String.format("datasources/%s", dataSourceId);
             GCSUtils.log("getSchema:ResourceName: " + resourceName);
             Schema schema = cloudSearch.indexing().datasources().getSchema(resourceName).execute();
-            GCSUtils.log("AFTER getSchema:ResourceName: ");
+            GCSUtils.log("AFTER getSchema:execute");
             schemastr = schema.toPrettyString();
             GCSUtils.log("AFTER schema.toPrettyString");
         } catch (GoogleJsonResponseException e) {
