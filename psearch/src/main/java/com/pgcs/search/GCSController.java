@@ -40,7 +40,7 @@ public class GCSController extends HttpServlet {
     } // end doGet
 
     private String getSchema() {
-        String dataSourceId = "c1daac23a76ec19dde99fa6eaa35e3da"; // Test
+        String dataSourceId = "c1daac23a76ec19da2795a7d778054c8"; // Test
         GCSSchema schema = new GCSSchema();
         return schema.getSchema(dataSourceId);
     } // end getSchema
