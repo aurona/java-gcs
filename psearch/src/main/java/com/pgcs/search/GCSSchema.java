@@ -41,6 +41,32 @@ public class GCSSchema {
     } // end getSchema
 
     /**
+    * Updates the schema of a datasource.
+    * @param dataSourceId Unique ID of the datasource.
+    */
+    public String updateSchema(String dataSourceId) {
+        String schemastr = "{ 'fruit': 'Apple', 'size': 'Large', 'color': 'Red' }";
+
+        try {
+            CloudSearch cloudSearch = buildAuthorizedClient();
+            String resourceName = String.format("datasources/%s", dataSourceId);
+            Schema schema = cloudSearch.indexing().datasources().updateSchema(resourceName).execute();
+            GCSUtils.log("AFTER getSchema:execute");
+            schemastr = schema.toPrettyString();
+            GCSUtils.log("AFTER schema.toPrettyString:" + schemastr);
+        } catch (GoogleJsonResponseException e) {
+            System.err.println("Unable to get schema: " + e.getDetails());
+        } catch (IOException e) {
+            System.err.println("Unable to get schema: " + e.getMessage());
+        }
+      
+      return schemastr;
+
+    } // end getSchema
+
+
+
+    /**
     * Builds and initializes the client with service account credentials.
     * @return CloudSearch instance
     * @throws IOException if unable to load credentials
