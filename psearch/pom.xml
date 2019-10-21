@@ -30,12 +30,23 @@
       <version>1.9.59</version>
     </dependency>
 
-    <!-- PHS: Not sure which ones are really needed -->
+    <!-- PHS: We need the three artifactIDs for com.google.api-client -->
     <dependency>
         <groupId>com.google.api-client</groupId>
         <artifactId>google-api-client</artifactId>
         <version>1.30.4</version>
     </dependency>
+    <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-appengine</artifactId>
+        <version>1.30.4</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-servlet</artifactId>
+        <version>1.30.4</version>
+    </dependency>
+    
     <dependency>
         <groupId>com.google.apis</groupId>
         <artifactId>google-api-services-docs</artifactId>

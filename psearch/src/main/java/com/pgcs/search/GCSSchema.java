@@ -32,10 +32,10 @@ public class GCSSchema {
             schemastr = schema.toPrettyString();
             GCSUtils.log("AFTER schema.toPrettyString");
         } catch (GoogleJsonResponseException e) {
-            GCSUtils.log("paso 6");
+            GCSUtils.log("GCSSchema: GoogleJsonResponseException");
             System.err.println("Unable to get schema: " + e.getDetails());
         } catch (IOException e) {
-            GCSUtils.log("paso 7");
+            GCSUtils.log("GCSSchema: IOException");
             System.err.println("Unable to get schema: " + e.getMessage());
         }
       
