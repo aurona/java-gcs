@@ -8,7 +8,7 @@ public class GCSUtils {
     private static final Logger logger = Logger.getLogger(GCSUtils.class.getName());
 
     public static void log(String logstr) {
-        logger.info("[PHS Logs] ===> " + logstr);
+        logger.info("====== [PHS Logs] ======> " + logstr);
     } // end Log
 
 } // end class

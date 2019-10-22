@@ -20,32 +20,26 @@ public class GCSController extends HttpServlet {
 
         String result = "";
 
+        // Reading configuration file from WEB-INF/classes (deployed in AppEngine .war file)
         GCSUtils.log("GCSController: Loading configuration");
-        String sourceId = "c1daac23a76ec19da2795a7d778054c8";
-        String localSchema = "demoschema.json";
-
-        GCSUtils.log("GCSController: SOURCE ID: " + sourceId);
-        GCSUtils.log("GCSController: LOCAL SCHEMA: " + localSchema);
-    
-        // TEST
         String [] args = new String[1];
         args[0] = "-Dconfig=WEB-INF/classes/psearch.properties";
         Configuration.initConfig(args);
-        ConfigValue<String> sourceIdconf = Configuration.getString("api.sourceId", null);
-        //ConfigValue<String> localSchemaconf = Configuration.getString("demo.schema", null);
+        ConfigValue<String> sourceId = Configuration.getString("api.sourceId", null);
+        ConfigValue<String> localSchema = Configuration.getString("demo.schema", null);
 
-        GCSUtils.log("GCSController: SOURCE ID 2: " + sourceIdconf.get());
+        GCSUtils.log("GCSController: SOURCE ID: " + sourceId.get());
+        GCSUtils.log("GCSController: SCHEMA FILE PATH: " + localSchema.get());
 
-        // PHS: When fixed from configuration file, remember to add .get() to these two variables
         // Confirm that we have read the needed configuration
-        if (sourceId == null) {
+        if (sourceId.get() == null) {
             throw new IllegalArgumentException("Missing api.sourceId value in configuration");
         }
-            if (localSchema == null) {
+        if (localSchema.get() == null) {
             throw new IllegalArgumentException("Missing demo.schema value in configuration");
         }
 
-        // Parameters in call URL
+        // Parameters in call URL: We decide which action to perform
         String order = request.getParameter("order");
         if (order == null) order = "test";
         GCSUtils.log("GCSController: Order: " + order);
@@ -56,11 +50,11 @@ public class GCSController extends HttpServlet {
         // Depending on the order, we make the call
         switch (order) {
             case "getschema":
-                result = gcsschema.getSchema(sourceId);
+                result = gcsschema.getSchema(sourceId.get());
                 GCSUtils.log("AFTER getSchema: " + result);
                 break;
             case "updateschema":
-                result = gcsschema.updateSchema(sourceId);
+                result = gcsschema.updateSchema(sourceId.get(), localSchema.get());
                 GCSUtils.log("AFTER updateSchema: " + result);
                 break;
             default:
@@ -69,8 +63,8 @@ public class GCSController extends HttpServlet {
 
         response.setContentType("text/plain");
         response.getWriter().println("GCSController response [GCSController Test OK]");
+        response.getWriter().println("GCSController response: " + result);
 
     } // end doGet
 
 } // Of GCSController
-

@@ -46,20 +46,25 @@ public class GCSSchema {
     * @param dataSourceId Unique ID of the datasource.
     * @param newSchema New JSON schema for the datasource.
     */
-    public String updateSchema(String dataSourceId) {
+    public String updateSchema(String dataSourceId, String schemaFilePath) {
 
         try {
             // Authenticating Service Account
             CloudSearch cloudSearch = buildAuthorizedClient();
 
             String resourceName = String.format("datasources/%s", dataSourceId);
-            Schema schema = new Schema();
+            
+            // Load the Schema from file in WEB-INF/classes
+            Schema schema;
+            try (BufferedReader br = new BufferedReader(new FileReader(schemaFilePath))) {
+                schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
+            }
 
-            GCSUtils.log("UPDATE 2");
+            GCSUtils.log("SCHEMA LOADED");
 
             UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
 
-            GCSUtils.log("UPDATE 3");
+            GCSUtils.log("Created updateSchemaRequest");
 
             Operation operation = cloudSearch.indexing().datasources()
                 .updateSchema(resourceName, updateSchemaRequest)
@@ -81,7 +86,6 @@ public class GCSSchema {
                 System.out.println("Schema updated.");
             }
 
-
         } catch (GoogleJsonResponseException e) {
         System.err.println("Unable to update schema: " + e.getDetails());
         } catch (IOException e) {
@@ -91,7 +95,7 @@ public class GCSSchema {
             + e.getMessage());
         }
 
-      return "whatever";
+        return "Updated Schema. Execute getschema to check";
 
     } // end getSchema
 
