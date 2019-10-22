@@ -2,7 +2,6 @@ package com.pgcs.search;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-// PHS: Other imports
 import java.io.IOException;
 import java.util.Collections;
 
@@ -16,11 +15,9 @@ import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 
-
 public class GCSSchema {
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
-
 
     /**
     * Retrieves the schema for a datasource.
@@ -33,16 +30,14 @@ public class GCSSchema {
             CloudSearch cloudSearch = buildAuthorizedClient();
             String resourceName = String.format("datasources/%s", dataSourceId);
             Schema schema = cloudSearch.indexing().datasources().getSchema(resourceName).execute();
-            GCSUtils.log("AFTER getSchema:execute");
             schemastr = schema.toPrettyString();
-            GCSUtils.log("AFTER schema.toPrettyString:" + schemastr);
         } catch (GoogleJsonResponseException e) {
             System.err.println("Unable to get schema: " + e.getDetails());
         } catch (IOException e) {
             System.err.println("Unable to get schema: " + e.getMessage());
         }
       
-      return schemastr;
+        return schemastr;
 
     } // end getSchema
 
@@ -58,12 +53,7 @@ public class GCSSchema {
             CloudSearch cloudSearch = buildAuthorizedClient();
 
             String resourceName = String.format("datasources/%s", dataSourceId);
-            Schema schema;
-
-            GCSUtils.log("UPDATE 1");
-            try (BufferedReader br = new BufferedReader(new FileReader("./schema.json"))) {
-                schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
-            } // end try
+            Schema schema = new Schema();
 
             GCSUtils.log("UPDATE 2");
 
