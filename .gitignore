@@ -3,4 +3,5 @@ psearch/.project
 psearch/.classpath
 psearch/.settings
 psearch/target
+*.code-workspace
 *.class
