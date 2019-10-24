@@ -23,7 +23,6 @@ h1 {
 h2 {
     color: #333333;
     font-size: 14px;
-    justify-self: left;
 }
 .title {
     grid-area: title;
@@ -31,11 +30,11 @@ h2 {
 }
 .header {
     grid-area: header;
-    background-color: #dddddd;
+    background-color: #ffffff;
 }
 .sidebar {
     grid-area: sidebar;
-    background-color: #dddddd;
+    background-color: #eeeeee;
 }
 .content {
     grid-area: content;
@@ -43,6 +42,7 @@ h2 {
     display: grid;
 }
 .footer {
+    min-height: 20px;
     grid-area: footer;
     background-color: #34A853;
     color: #ffffff;
