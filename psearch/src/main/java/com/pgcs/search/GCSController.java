@@ -7,38 +7,41 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.enterprise.cloudsearch.sdk.config.ConfigValue;
-import com.google.enterprise.cloudsearch.sdk.config.Configuration;
-
-// *** Servlet HelloAppEngine for /hello ***
-@WebServlet(name = "GCSController", value = "/hello")
+// *** Servlet HelloAppEngine for /gcs ***
+@WebServlet(name = "GCSController", value = "/gcs")
 public class GCSController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; // serializable warning
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
 
+            // Only used for Unit Testing now
+            String result = "GCSController Test OK";
+            response.setContentType("text/plain");
+            response.getWriter().println(result);
+    } // end doGet   
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+
         String result = "";
 
-        // Reading configuration file from WEB-INF/classes (deployed in AppEngine .war file)
-        GCSUtils.log("GCSController: Loading configuration");
-        String [] args = new String[1];
-        args[0] = "-Dconfig=WEB-INF/classes/psearch.properties";
-        Configuration.initConfig(args);
-        ConfigValue<String> sourceId = Configuration.getString("api.sourceId", null);
-        ConfigValue<String> localSchema = Configuration.getString("demo.schema", null);
+        // If we received params, override these values
+        String datasourceid = request.getParameter("datasourceid");
+        GCSUtils.log("GCSController: SOURCE ID test 1: " + datasourceid);
 
-        GCSUtils.log("GCSController: SOURCE ID: " + sourceId.get());
-        GCSUtils.log("GCSController: SCHEMA FILE PATH: " + localSchema.get());
+        datasourceid = request.getParameterValues("datasourceid")[0];
+        GCSUtils.log("GCSController: SOURCE ID test 2: " + datasourceid);
 
-        // Confirm that we have read the needed configuration
-        if (sourceId.get() == null) {
-            throw new IllegalArgumentException("Missing api.sourceId value in configuration");
-        }
-        if (localSchema.get() == null) {
-            throw new IllegalArgumentException("Missing demo.schema value in configuration");
-        }
+        if (datasourceid == null) datasourceid = "";
+
+        String schemastr = request.getParameter("schema");
+        if (schemastr == null) schemastr = "";
+
+        GCSUtils.log("GCSController: SOURCE ID: " + datasourceid);
+        GCSUtils.log("GCSController: SCHEMA FILE PATH: " + schemastr);
 
         // Parameters in call URL: We decide which action to perform
         String order = request.getParameter("order");
@@ -51,11 +54,11 @@ public class GCSController extends HttpServlet {
         // Depending on the order, we make the call
         switch (order) {
             case "getschema":
-                result = gcsschema.getSchema(sourceId.get());
+                result = gcsschema.getSchema(datasourceid);
                 GCSUtils.log("AFTER getSchema: " + result);
                 break;
             case "updateschema":
-                result = gcsschema.updateSchema(sourceId.get(), localSchema.get());
+                result = gcsschema.updateSchema(datasourceid, schemastr);
                 GCSUtils.log("AFTER updateSchema: " + result);
                 break;
             default:
@@ -63,7 +66,8 @@ public class GCSController extends HttpServlet {
         } // end switch
 
         response.setContentType("text/plain");
-        response.getWriter().println(result);
+        response.getWriter().println("Order: " + order
+                                   + "Result:\n\n" + result);
 
     } // end doGet
 

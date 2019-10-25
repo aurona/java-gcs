@@ -3,4 +3,4 @@ export PATH=/Users/pablohs/google-cloud-sdk/bin:$PATH
 
 # First time: gcloud auth login
 # and login with the correct account: pablohs@gcloudsearch.com
-gcloud config set project java-gcs-256106
+gcloud config set project pgcs-java

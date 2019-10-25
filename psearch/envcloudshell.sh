@@ -1,1 +1,1 @@
-gcloud config set project java-gcs-256106
+gcloud config set project pgcs-java
