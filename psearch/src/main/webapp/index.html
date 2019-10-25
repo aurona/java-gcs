@@ -16,11 +16,14 @@
       <div class="title">
         <h1>Google Cloud Search **** v1 ***</h1>
       </div>
-      <div class="header"></div>
+      <div class="header">
+        DatasourceID: <input type="text" value="c1daac23a76ec19da2795a7d778054c8" id="dsid">
+      </div>
       <div class="sidebar">
         <h2>SCHEMA</h2>  
-        <button type="button" onclick="getSchema()">Get Schema</button><br><br>
-        <button type="button" onclick="updateSchema()">Update Schema</button><br><br>
+        <button type="button" onclick="getSchema(document.getElementById('dsid').value)">Get Schema</button><br><br>
+        <button type="button" onclick="updateSchema('test')">Update Schema</button><br><br>
+        <button type="button" onclick="test(document.getElementById('dsid').value)">Test</button><br><br>
       </div>
       <div id="res" class="content"> Results here </div>
       <div class="footer"> Google Cloud Search rocks ;-) </div>
