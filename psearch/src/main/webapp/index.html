@@ -4,25 +4,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content=width=device-width, initial-scale=1.0"> 
-    <link rel="stylesheet" href="style.css">
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <script type='text/javascript' language='javascript' src='js/app-ajax.js'/></script>
+
     <title>Google Cloud Search</title>
   </head>
 
   <body>
     <div class="grid">
       <div class="title">
-        <h1>Google Cloud Search</h1>
+        <h1>Google Cloud Search **** v1 ***</h1>
       </div>
       <div class="header"></div>
       <div class="sidebar">
         <h2>SCHEMA</h2>  
-        <p>GetSchema</p>
-        <p>UpdateSchema</p>        
+        <button type="button" onclick="getSchema()">Get Schema</button><br><br>
+        <button type="button" onclick="updateSchema()">Update Schema</button><br><br>
       </div>
-      <div class="content"> Content </div>
+      <div id="res" class="content"> Results here </div>
       <div class="footer"> Google Cloud Search rocks ;-) </div>
     </div>
+
   </body>
 
 </html>

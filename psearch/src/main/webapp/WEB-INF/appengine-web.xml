@@ -5,4 +5,14 @@
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
+    <static-files>
+        <include path="/**.html" expiration="10s">
+        </include>
+        <include path="/stylesheets/**.css" expiration="10s">
+            <http-header name="Content-Type" value="text/css" />
+        </include>
+        <include path="/js/**.js" expiration="10s">
+            <http-header name="Content-Type" value="application/javascript" />
+        </include>
+    </static-files>
 </appengine-web-app>

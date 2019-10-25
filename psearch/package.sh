@@ -1,1 +1,1 @@
-mvn package appengine:deploy -DskipTests
+mvn package -DskipTests
