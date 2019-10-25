@@ -60,16 +60,11 @@ public class GCSSchema {
                 schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
             }
 
-            GCSUtils.log("SCHEMA LOADED");
-
             UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
-
-            GCSUtils.log("Created updateSchemaRequest");
 
             Operation operation = cloudSearch.indexing().datasources()
                 .updateSchema(resourceName, updateSchemaRequest)
                 .execute();
-            GCSUtils.log("AFTER updateSchema:execute");
 
             // This Operation is not syncronous. We have to wait and see when it finishes
             while (operation.getDone() == null || operation.getDone() == false) {

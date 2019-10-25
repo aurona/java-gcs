@@ -13,6 +13,7 @@ import com.google.enterprise.cloudsearch.sdk.config.Configuration;
 // *** Servlet HelloAppEngine for /hello ***
 @WebServlet(name = "GCSController", value = "/hello")
 public class GCSController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,8 +63,7 @@ public class GCSController extends HttpServlet {
         } // end switch
 
         response.setContentType("text/plain");
-        response.getWriter().println("GCSController response [GCSController Test OK]");
-        response.getWriter().println("GCSController response: " + result);
+        response.getWriter().println(result);
 
     } // end doGet
 
