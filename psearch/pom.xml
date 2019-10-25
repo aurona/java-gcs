@@ -148,7 +148,7 @@
         <artifactId>appengine-maven-plugin</artifactId>
         <version>2.1.0</version>
         <configuration>
-            <projectId>java-gcs-256106</projectId>
+            <project>java-gcs-256106</project>
             <version>1</version>
 
         </configuration>
