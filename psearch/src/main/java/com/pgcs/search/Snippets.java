@@ -23,6 +23,7 @@
         ConfigValue<String> sourceId = Configuration.getString("api.sourceId", null);
         ConfigValue<String> localSchema = Configuration.getString("demo.schema", null);
         
+        
         // Confirm that we have read the needed configuration
         if (sourceId.get() == null) {
             throw new IllegalArgumentException("Missing api.sourceId value in configuration");
@@ -30,5 +31,14 @@
         if (localSchema.get() == null) {
             throw new IllegalArgumentException("Missing demo.schema value in configuration");
         }
+
+
+        // Load the Schema from file in WEB-INF/classes
+        Schema schema;
+        try (BufferedReader br = new BufferedReader(new FileReader(schemaFilePath))) {
+            schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
+        }
+
+
 
         */

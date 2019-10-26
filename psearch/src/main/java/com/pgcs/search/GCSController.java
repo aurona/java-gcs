@@ -16,6 +16,9 @@ public class GCSController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
 
+            // Converting goGet to doPost
+            // doPost(request, response);
+
             // Only used for Unit Testing now
             String result = "GCSController Test OK";
             response.setContentType("text/plain");
@@ -29,12 +32,7 @@ public class GCSController extends HttpServlet {
         String result = "";
 
         // If we received params, override these values
-        String datasourceid = request.getParameter("datasourceid");
-        GCSUtils.log("GCSController: SOURCE ID test 1: " + datasourceid);
-
-        datasourceid = request.getParameterValues("datasourceid")[0];
-        GCSUtils.log("GCSController: SOURCE ID test 2: " + datasourceid);
-
+        String datasourceid = request.getParameter("datasourceid"); // This is also valid: datasourceid = request.getParameterValues("datasourceid")[0];
         if (datasourceid == null) datasourceid = "";
 
         String schemastr = request.getParameter("schema");
@@ -55,20 +53,18 @@ public class GCSController extends HttpServlet {
         switch (order) {
             case "getschema":
                 result = gcsschema.getSchema(datasourceid);
-                GCSUtils.log("AFTER getSchema: " + result);
                 break;
             case "updateschema":
                 result = gcsschema.updateSchema(datasourceid, schemastr);
-                GCSUtils.log("AFTER updateSchema: " + result);
                 break;
             default:
                 break;
         } // end switch
 
         response.setContentType("text/plain");
-        response.getWriter().println("Order: " + order
-                                   + "Result:\n\n" + result);
+        GCSUtils.log("RESULT: \n" + result);
+        response.getWriter().println(result);
 
-    } // end doGet
+    } // end doPost
 
 } // Of GCSController

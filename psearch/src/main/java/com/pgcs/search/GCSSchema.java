@@ -47,7 +47,8 @@ public class GCSSchema {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchema(String dataSourceId, String schemaFilePath) {
-
+        String result = "Updated Schema. Execute getschema to check";
+        
         try {
             // Authenticating Service Account
             CloudSearch cloudSearch = buildAuthorizedClient();
@@ -76,23 +77,26 @@ public class GCSSchema {
             // Operation is complete, check result
             Status error = operation.getError();
             if (error != null) {
-                System.err.println("Error updating schema:" + error.getMessage());
+                result = "Error updating schema:" + error.getMessage();
+                System.err.println(result);
             } else {
                 System.out.println("Schema updated.");
             }
 
         } catch (GoogleJsonResponseException e) {
-        System.err.println("Unable to update schema: " + e.getDetails());
+            result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();
+            System.err.println(result);
         } catch (IOException e) {
-        System.err.println("Unable to update schema: " + e.getMessage());
+            result = "EXCEPTION IOException: Unable to update schema: " + e.getMessage();
+            System.err.println(result);
         } catch (InterruptedException e) {
-        System.err.println("Interrupted while waiting for schema update: "
-            + e.getMessage());
+            result = "EXCEPTION: Interrupted while waiting for schema update: " + e.getMessage();
+            System.err.println(result);
         }
 
-        return "Updated Schema. Execute getschema to check";
+        return result;
 
-    } // end getSchema
+    } // end updateSchema
 
 
 
