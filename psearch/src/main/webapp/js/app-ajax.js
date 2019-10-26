@@ -24,7 +24,7 @@ function getHTTPObject() {
 } // end getHTTPObject
 
 
-function handler() { //Call a function when the state changes.
+function handler() { // Call a function when the state changes.
         console.log("PHS LOG: handler start");
         if(xhttp.readyState == 4 && xhttp.status == 200) {
                 console.log("PHS LOG: handler inside if: " + xhttp.responseText);
