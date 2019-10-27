@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// *** Servlet for /gcs ***
+// Proxy 'gcs' for parameters encoded in URL 
 @WebServlet(name = "GCSController", value = "/gcs")
 public class GCSController extends HttpServlet {
 	private static final long serialVersionUID = 1L; // serializable warning
@@ -53,9 +53,6 @@ public class GCSController extends HttpServlet {
                 break;
             case "updateschemajson":
                 result = gcsschema.updateSchemaJSON(datasourceid, schemastr);
-                break;
-            case "updateschemafile":
-                result = gcsschema.updateSchemaFile(datasourceid, schemastr);
                 break;
             case "test":
                 result = "PARAMS: " + datasourceid + " - " + schemastr; // gcsschema.test(datasourceid, schemastr);

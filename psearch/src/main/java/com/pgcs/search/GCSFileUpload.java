@@ -2,33 +2,39 @@ package com.pgcs.search;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// *** Servlet for /upload ***
+// Proxy 'upload' for parameters encoded in URL 
 @WebServlet(name = "GCSFileUpload", value = "/upload")
-@MultipartConfig
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
+                 maxFileSize = 1024 * 1024 * 25, // 25 MB
+                 maxRequestSize = 1024 * 1024 * 50) // 50 MB
 public class GCSFileUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L; // serializable warning
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+        throws ServletException, IOException {
 
         String result = "";
 
-        // If we received params, override these values. I am not checking if they are null... should I?
-        String datasourceid = request.getParameter("datasourceid"); // This is also valid: datasourceid = request.getParameterValues("datasourceid")[0];
-        String schemastr = request.getParameter("schema");
+        String order        = request.getParameter("order");
+        String datasourceid = request.getParameter("datasourceid");
+        String schemajson   = request.getParameter("schemajson");
+        String schemafile   = request.getParameter("schemafile");
+        //final Part filePart = request.getPart("file");
 
         GCSUtils.log("GCSFileUpload: SOURCE ID: " + datasourceid);
-        GCSUtils.log("GCSFileUpload: SCHEMA FILE PATH: " + schemastr);
+        GCSUtils.log("GCSFileUpload: SCHEMA FILE JSON: " + schemajson);
+        GCSUtils.log("GCSFileUpload: SCHEMA FILE: " + schemafile);
 
         // Parameters in call URL: We decide which action to perform
-        String order = request.getParameter("order");
+        //String order = request.getParameter("order");
         if (order == null) order = "test";
         GCSUtils.log("GCSFileUpload: Order: " + order);
 
@@ -38,10 +44,10 @@ public class GCSFileUpload extends HttpServlet {
         // Depending on the order, we make the call
         switch (order) {
             case "updateschemafile":
-                result = gcsschema.updateSchemaFile(datasourceid, schemastr);
+                result = gcsschema.updateSchemaFile(datasourceid, schemajson);
                 break;
             case "test":
-                result = "PARAMS: " + datasourceid + " - " + schemastr; // gcsschema.test(datasourceid, schemastr);
+                result = "TEST: " + order + " / " + datasourceid + " / " + schemajson + " / " + schemafile;
                 break;
             default:
                 break;

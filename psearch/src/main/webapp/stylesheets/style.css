@@ -34,7 +34,7 @@ h2 {
 }
 .header {
     grid-area: header;
-    background-color: #eeeeee;
+    background-color: #dddddd;
     min-height: 30px;
     /* To center text correctly within a section, both vertically and horizontally */
     display: flex;
