@@ -83,7 +83,12 @@
         <artifactId>google-cloud-logging</artifactId>
         <version>1.98.0</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-storage</artifactId>
+      <version>1.98.0</version>
+    </dependency>
+    
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -117,6 +122,7 @@
       <version>1.9.76</version>
       <scope>test</scope>
     </dependency>
+
 
     <dependency>
       <groupId>com.google.truth</groupId>

@@ -39,6 +39,14 @@
             schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
         }
 
+        // Load the Schema from file in WEB-INF/classes
+        Schema schema;
+        schema = cloudSearch.getJsonFactory().fromString(schemaFilePath, Schema.class); // schemaFilePath is the entire JSON schema
+
+        try (BufferedReader br = new BufferedReader(new FileReader(schemaFilePath))) {
+            schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class); 
+        }
+
 
 
         */

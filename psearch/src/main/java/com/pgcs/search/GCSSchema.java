@@ -1,7 +1,5 @@
 package com.pgcs.search;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -46,21 +44,18 @@ public class GCSSchema {
     * @param dataSourceId Unique ID of the datasource.
     * @param newSchema New JSON schema for the datasource.
     */
-    public String updateSchema(String dataSourceId, String schemaFilePath) {
-        String result = "Updated Schema. Execute getschema to check";
+    public String updateSchema(String dataSourceId, String schemastr) {
+        String result = "updateSchema";
         
         try {
             // Authenticating Service Account
             CloudSearch cloudSearch = buildAuthorizedClient();
 
             String resourceName = String.format("datasources/%s", dataSourceId);
-            
-            // Load the Schema from file in WEB-INF/classes
-            Schema schema;
-            try (BufferedReader br = new BufferedReader(new FileReader(schemaFilePath))) {
-                schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class);
-            }
 
+            // Load the Schema from a string received
+            Schema schema;
+            schema = cloudSearch.getJsonFactory().fromString(schemastr, Schema.class);
             UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
 
             Operation operation = cloudSearch.indexing().datasources()
@@ -80,7 +75,8 @@ public class GCSSchema {
                 result = "Error updating schema:" + error.getMessage();
                 System.err.println(result);
             } else {
-                System.out.println("Schema updated.");
+                result = "Schema Updated. Execute Get Schema to check";
+                System.out.println(result);
             }
 
         } catch (GoogleJsonResponseException e) {
@@ -91,6 +87,29 @@ public class GCSSchema {
             System.err.println(result);
         } catch (InterruptedException e) {
             result = "EXCEPTION: Interrupted while waiting for schema update: " + e.getMessage();
+            System.err.println(result);
+        }
+
+        return result;
+
+    } // end updateSchema
+
+
+    public String test(String dataSourceId, String schemaFilePath) {
+        String result = "test";
+        GCSUtils.log("GCSSchema ***TEST***: Schema File: " + schemaFilePath);
+        
+        try {
+            Schema schema;
+            CloudSearch cloudSearch = buildAuthorizedClient();
+            schema = cloudSearch.getJsonFactory().fromString(schemaFilePath, Schema.class); // schemaFilePath is the entire JSON schema
+            GCSUtils.log("GCSSchema: ***TEST***: " + schema.toPrettyString());
+            result = schema.toPrettyString();
+        } catch (GoogleJsonResponseException e) {
+            result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();
+            System.err.println(result);
+        } catch (IOException e) {
+            result = "EXCEPTION IOException: Unable to update schema: " + e.getMessage();
             System.err.println(result);
         }
 
@@ -117,13 +136,13 @@ public class GCSSchema {
                 "https://www.googleapis.com/auth/cloud_search"));
         }
 
-    // Build the cloud search client
-    return new CloudSearch.Builder(
-        Utils.getDefaultTransport(),
-        Utils.getDefaultJsonFactory(),
-        credential)
-        .setApplicationName("default") // PHS: Name of Search Application with access to DataSource
-        .build();
-  }
+        // Build the cloud search client
+        return new CloudSearch.Builder(
+            Utils.getDefaultTransport(),
+            Utils.getDefaultJsonFactory(),
+            credential)
+            .setApplicationName("default") // PHS: Name of Search Application with access to DataSource
+            .build();
+    } // end buildAuthorizedClient
 
 } // end class

@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content=width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <meta name="robots"   content="noindex"> 
     <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
@@ -20,7 +20,7 @@
       </div>
       <div class="header">
         DatasourceID: &nbsp; <input type="text" value="c1daac23a76ec19da2795a7d778054c8" id="dsid"> &nbsp;&nbsp;
-        Schema: &nbsp;       <input type="text" value=""                                 id="schema">
+        Schema:       &nbsp; <input type="text" value="gs://pgcs-java-storage/"          id="schema">
       </div>
       <div class="sidebar">
         <h2>SCHEMA</h2>  
@@ -30,7 +30,7 @@
                                                     Update Schema</button><br><br>
         <button type="button" onclick="test(document.getElementById('dsid').value,
                                             document.getElementById('schema').value)">
-                                            Test</button><br><br>
+                                            Local Test</button><br><br>
       </div>
       <div id="res" class="content"> Results here </div>
       <div class="footer"> Google Cloud Search rocks ;-) </div>

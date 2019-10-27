@@ -39,10 +39,8 @@ function ajaxPostCall(params) {
         console.log("PHS LOG: ajaxPostCall with params: " + params);
         xhttp.open("POST", "https://pgcs-java.appspot.com/gcs", true);
 
-        //Send the proper header information along with the request
+        // Send the proper header information along with the request. Required for POST method
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	//xhttp.setRequestHeader("Content-length", params.length);
-	//xhttp.setRequestHeader("Connection", "close");
 
         xhttp.onreadystatechange = handler;
         xhttp.send(params);
@@ -56,12 +54,14 @@ function getSchema(datasourceid) {
 
 
 function updateSchema(datasourceid, schemastr) {
-        var params = "order=updateschema&datasourceid=" + datasourceid + "&schema=" + schemastr;
+        var params = "order=updateschema&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
+        console.log("PHS LOG: updateSchema params: " + params);
         ajaxPostCall(params);
 } // end updateSchema
 
 
 function test(datasourceid, schemastr) {
-        var params = "order=updateschema&datasourceid=" + datasourceid + "&schema=" + schemastr;
-        console.log("PHS LOG: params: " + params);
+        var params = "order=test&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
+        console.log("PHS LOG: test params: " + params);
+        ajaxPostCall(params);
 } // end test

@@ -31,12 +31,9 @@ public class GCSController extends HttpServlet {
 
         String result = "";
 
-        // If we received params, override these values
+        // If we received params, override these values. I am not checking if they are null... should I?
         String datasourceid = request.getParameter("datasourceid"); // This is also valid: datasourceid = request.getParameterValues("datasourceid")[0];
-        if (datasourceid == null) datasourceid = "";
-
         String schemastr = request.getParameter("schema");
-        if (schemastr == null) schemastr = "";
 
         GCSUtils.log("GCSController: SOURCE ID: " + datasourceid);
         GCSUtils.log("GCSController: SCHEMA FILE PATH: " + schemastr);
@@ -56,6 +53,9 @@ public class GCSController extends HttpServlet {
                 break;
             case "updateschema":
                 result = gcsschema.updateSchema(datasourceid, schemastr);
+                break;
+            case "test":
+                result = gcsschema.test(datasourceid, schemastr);
                 break;
             default:
                 break;
