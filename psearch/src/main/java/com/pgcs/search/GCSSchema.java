@@ -40,12 +40,12 @@ public class GCSSchema {
     } // end getSchema
 
     /**
-    * Updates the schema of a datasource.
+    * Updates the schema of a datasource from a JSON string (no white spaes, etc)
     * @param dataSourceId Unique ID of the datasource.
     * @param newSchema New JSON schema for the datasource.
     */
-    public String updateSchema(String dataSourceId, String schemastr) {
-        String result = "updateSchema";
+    public String updateSchemaJSON(String dataSourceId, String schemastr) {
+        String result = "updateSchemaJSON";
         
         try {
             // Authenticating Service Account
@@ -92,7 +92,63 @@ public class GCSSchema {
 
         return result;
 
-    } // end updateSchema
+    } // end updateSchemaJSON
+
+
+    /**
+    * Updates the schema of a datasource from a file containing the JSON definition
+    * @param dataSourceId Unique ID of the datasource.
+    * @param newSchema New JSON schema for the datasource.
+    */
+    public String updateSchemaFile(String dataSourceId, String schemastr) {
+        String result = "updateSchemaFile";
+        
+        try {
+            // Authenticating Service Account
+            CloudSearch cloudSearch = buildAuthorizedClient();
+
+            String resourceName = String.format("datasources/%s", dataSourceId);
+
+            // Load the Schema from a string received
+            Schema schema;
+            schema = cloudSearch.getJsonFactory().fromString(schemastr, Schema.class);
+            UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
+
+            Operation operation = cloudSearch.indexing().datasources()
+                .updateSchema(resourceName, updateSchemaRequest)
+                .execute();
+
+            // This Operation is not syncronous. We have to wait and see when it finishes
+            while (operation.getDone() == null || operation.getDone() == false) {
+                // Wait before polling again
+                Thread.sleep(OPERATION_POLL_INTERVAL);
+                operation = cloudSearch.operations().get(operation.getName()).execute();
+            } // end while
+
+            // Operation is complete, check result
+            Status error = operation.getError();
+            if (error != null) {
+                result = "Error updating schema:" + error.getMessage();
+                System.err.println(result);
+            } else {
+                result = "Schema Updated. Execute Get Schema to check";
+                System.out.println(result);
+            }
+
+        } catch (GoogleJsonResponseException e) {
+            result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();
+            System.err.println(result);
+        } catch (IOException e) {
+            result = "EXCEPTION IOException: Unable to update schema: " + e.getMessage();
+            System.err.println(result);
+        } catch (InterruptedException e) {
+            result = "EXCEPTION: Interrupted while waiting for schema update: " + e.getMessage();
+            System.err.println(result);
+        }
+
+        return result;
+
+    } // end updateSchemaFile
 
 
     public String test(String dataSourceId, String schemastr) {

@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <meta name="robots"   content="noindex"> 
+    <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+
     <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <script type='text/javascript' language='javascript' src='js/app-ajax.js'/></script>
@@ -19,18 +22,25 @@
         <h1>Google Cloud Search</h1>
       </div>
       <div class="header">
-        DatasourceID: &nbsp; <input type="text" value="c1daac23a76ec19da2795a7d778054c8" id="dsid"> &nbsp;&nbsp;
-        Schema:       &nbsp; <input type="text" value="" id="schema">
+        <form id="inputvalues">
+          DatasourceID:  &nbsp; <input type="text" value="c1daac23a76ec19da2795a7d778054c8" id="dsid"> &nbsp;&nbsp;
+          Schema (JSON): &nbsp; <input type="text" value="" id="schemaJSON"> &nbsp;&nbsp;
+          Schema (File): &nbsp; <input type="file" value="" id="schemaFile"> &nbsp;&nbsp;
+        </form>
       </div>
       <div class="sidebar">
         <h2>SCHEMA</h2>  
         <button type="button" onclick="getSchema(document.getElementById('dsid').value)">Get Schema</button><br><br>
-        <button type="button" onclick="updateSchema(document.getElementById('dsid').value,
-                                                    document.getElementById('schema').value)">
-                                                    Update Schema</button><br><br>
+        <button type="button" onclick="updateSchemaJSON(document.getElementById('dsid').value,
+                                                        document.getElementById('schemaJSON').value)">
+                                                        Update Schema (JSON)</button><br><br>
+        <button type="button" onclick="updateSchemaFile(document.getElementById('dsid').value,
+                                                        document.getElementById('schemaFile').files[0])">
+                                                        Update Schema (File)</button><br><br>
+        <h2>TESTs</h2>  
         <button type="button" onclick="test(document.getElementById('dsid').value,
-                                            document.getElementById('schema').value)">
-                                            Local Test</button><br><br>
+                                            document.getElementById('schemaJSON').value)">
+                                            FormData</button><br><br>
       </div>
       <div id="res" class="content"> Results here </div>
       <div class="footer"> Google Cloud Search rocks ;-) </div>

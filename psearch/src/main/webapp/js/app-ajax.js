@@ -37,13 +37,20 @@ function handler() { // Call a function when the state changes.
 
 function ajaxPostCall(params) {
         console.log("PHS LOG: ajaxPostCall with params: " + params);
-        xhttp.open("POST", "https://pgcs-java.appspot.com/gcs", true);
+        xhttp.open("POST", "/gcs", true); // Name of Servlet, without https://pgcs-java.appspot.com/gcs
 
         // Send the proper header information along with the request. Required for POST method
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  // If you use URL encoded parameters to sent the parameters
 
         xhttp.onreadystatechange = handler;
         xhttp.send(params);
+} // end ajaxPostCall
+
+function ajaxPostCallFormData(fd) {
+        xhttp.open("POST", "/gcs", true); // Name of Servlet, without https://pgcs-java.appspot.com/gcs
+	xhttp.setRequestHeader("Content-type", "multipart/form-data"); // If form-data, Servlet needs directive @MultipartConfig
+        xhttp.onreadystatechange = handler;
+        xhttp.send(fd);
 } // end ajaxPostCall
 
 
@@ -53,15 +60,37 @@ function getSchema(datasourceid) {
 } // end getSchema
 
 
-function updateSchema(datasourceid, schemastr) {
-        var params = "order=updateschema&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
-        console.log("PHS LOG: updateSchema params: " + params);
+function updateSchemaJSON(datasourceid, schemastr) {
+        var params = "order=updateschemajson&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
+        console.log("PHS LOG: updateSchemaJSON params: " + params);
         ajaxPostCall(params);
-} // end updateSchema
+} // end updateSchemaJSON
+
+
+function updateSchemaFile(datasourceid, schemastr) {
+        console.log("PHS LOG: updateSchemaFile datasourceid: " + datasourceid);
+        var formData = new FormData();
+        formData.append('order', 'updateschemafile');
+        formData.append('datasourceid', datasourceid);
+        formData.append('schema', schemastr);
+
+        console.log("PHS LOG: updateSchemaFile params added");
+
+        // Display the values
+        for (var value of formData.values())
+                console.log(value);
+
+        xhttp.open("POST", "/gcs", true);
+	xhttp.setRequestHeader("Content-type", "multipart/form-data"); // If form-data, Servlet needs directive @MultipartConfig
+        xhttp.onreadystatechange = handler;
+        xhttp.send(formData);
+} // end updateSchemaFile
 
 
 function test(datasourceid, schemastr) {
-        var params = "order=test&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
-        console.log("PHS LOG: test params: " + params);
-        ajaxPostCall(params);
+        var formData = new FormData();
+        formData.append('order', 'test');
+        formData.append('datasourceid', datasourceid);
+        formData.append('schema', schemastr);
+        ajaxPostCallFormData(formData);
 } // end test
