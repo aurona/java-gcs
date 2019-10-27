@@ -95,14 +95,14 @@ public class GCSSchema {
     } // end updateSchema
 
 
-    public String test(String dataSourceId, String schemaFilePath) {
+    public String test(String dataSourceId, String schemastr) {
         String result = "test";
-        GCSUtils.log("GCSSchema ***TEST***: Schema File: " + schemaFilePath);
+        GCSUtils.log("GCSSchema ***TEST***: Schema File: " + schemastr);
         
         try {
             Schema schema;
             CloudSearch cloudSearch = buildAuthorizedClient();
-            schema = cloudSearch.getJsonFactory().fromString(schemaFilePath, Schema.class); // schemaFilePath is the entire JSON schema
+            schema = cloudSearch.getJsonFactory().fromString("{\"objectDefinitions\":[{\"name\":\"movie\"},{\"name\":\"person\"}]}", Schema.class);
             GCSUtils.log("GCSSchema: ***TEST***: " + schema.toPrettyString());
             result = schema.toPrettyString();
         } catch (GoogleJsonResponseException e) {
