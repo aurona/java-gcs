@@ -29,9 +29,10 @@ public class GCSFileUpload extends HttpServlet {
         String schemafile   = request.getParameter("schemafile");
         //final Part filePart = request.getPart("file");
 
+        GCSUtils.log("GCSFileUpload: ORDER: " + order);
         GCSUtils.log("GCSFileUpload: SOURCE ID: " + datasourceid);
         GCSUtils.log("GCSFileUpload: SCHEMA FILE JSON: " + schemajson);
-        GCSUtils.log("GCSFileUpload: SCHEMA FILE: " + schemafile);
+        GCSUtils.log("GCSFileUpload: SCHEMA FILE CONTENT: " + schemafile);
 
         // Parameters in call URL: We decide which action to perform
         //String order = request.getParameter("order");
@@ -44,7 +45,7 @@ public class GCSFileUpload extends HttpServlet {
         // Depending on the order, we make the call
         switch (order) {
             case "updateschemafile":
-                result = gcsschema.updateSchemaFile(datasourceid, schemajson);
+                result = gcsschema.updateSchemaFile(datasourceid, schemafile);
                 break;
             case "test":
                 result = "TEST: " + order + " / " + datasourceid + " / " + schemajson + " / " + schemafile;

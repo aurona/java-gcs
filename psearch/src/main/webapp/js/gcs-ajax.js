@@ -1,6 +1,6 @@
-// Global XMLHttpRequest for all methods
+// Global all methods
 var xhttp = getHTTPObject();
-
+var jsonschemastr = "";
 
 // Scripts to execute actions
 function getHTTPObject() {
@@ -46,8 +46,9 @@ function ajaxPostCall(params) {
         xhttp.send(params);
 } // end ajaxPostCall
 
+
 function ajaxPostCallFormData(fd) {
-        xhttp.open("POST", "/upload", true); // Name of Servlet, without https://pgcs-java.appspot.com/gcs
+        xhttp.open("POST", "/upload", true);
 	// xhttp.setRequestHeader("Content-type", "multipart/form-data"); // If form-data, Servlet needs directive @MultipartConfig. But it actually fails and we have to remove this.
         xhttp.onreadystatechange = handler;
         xhttp.send(fd);
@@ -67,38 +68,18 @@ function updateSchemaJSON(datasourceid, schemastr) {
 } // end updateSchemaJSON
 
 
-function updateSchemaFile(datasourceid, schemastr) {
+// I haven't been able to pass the content of the schema file as parameter, so I am reading it here directly
+function updateSchemaFile(datasourceid) {
         console.log("PHS LOG: updateSchemaFile datasourceid: " + datasourceid);
         var formData = new FormData();
         formData.append('order', 'updateschemafile');
         formData.append('datasourceid', datasourceid);
-        formData.append('schema', schemastr);
-
-        console.log("PHS LOG: updateSchemaFile params added");
+        formData.append('schemafile', document.getElementById('fileread').value); // This is what I meant...
 
         // Display the values
-        for (var value of formData.values())
-                console.log(value);
+        for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
 
-        xhttp.open("POST", "/upload", true);
-	xhttp.setRequestHeader("Content-type", "multipart/form-data"); // If form-data, Servlet needs directive @MultipartConfig
-        xhttp.onreadystatechange = handler;
-        xhttp.send(formData);
+        ajaxPostCallFormData(formData);
 } // end updateSchemaFile
 
 
-function test(datasourceid, schemajson, schemafile) {
-        var formData = new FormData();
-        formData.append("order", "test");
-        
-        formData.append("datasourceid", datasourceid);
-        console.log("PHS LOG: test datasourceid: " + datasourceid);
-        
-        formData.append("schemajson", schemajson);
-        console.log("PHS LOG: test schemajson: " + schemajson);
-        
-        formData.append("schemafile", schemafile);
-        console.log("PHS LOG: test schemafile: " + schemafile);
-
-        ajaxPostCallFormData(formData);
-} // end test

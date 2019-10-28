@@ -10,7 +10,7 @@
 
     <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <script type='text/javascript' language='javascript' src='js/app-ajax.js'/></script>
+    <script type='text/javascript' language='javascript' src='js/gcs-ajax.js'/></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
     <title>Google Cloud Search</title>
@@ -22,31 +22,31 @@
         <h1>Google Cloud Search</h1>
       </div>
       <div class="header">
-        <form id="inputvalues">
           DatasourceID:  &nbsp; <input type="text" value="c1daac23a76ec19da2795a7d778054c8" name="dsid" id="dsid"> &nbsp;&nbsp;
-          Schema (JSON): &nbsp; <input type="text" value="" name="schemaJSON" id="schemaJSON"> &nbsp;&nbsp;
           Schema (File): &nbsp; <input type="file" value="" name="schemaFile" id="schemaFile"> &nbsp;&nbsp;
-        </form>
+      </div>
+      <div class="header">
+        <textarea style="width:200px;height: 100px" name="fileread" id="fileread"></textarea>
       </div>
       <div class="sidebar">
         <h2>SCHEMA</h2>  
         <button type="button" onclick="getSchema(document.getElementById('dsid').value)">Get Schema</button><br><br>
-        <button type="button" onclick="updateSchemaJSON(document.getElementById('dsid').value,
-                                                        document.getElementById('schemaJSON').value)">
-                                                        Update Schema (JSON)</button><br><br>
         <button type="button" onclick="updateSchemaFile(document.getElementById('dsid').value,
                                                         document.getElementById('schemaFile').files[0])">
-                                                        Update Schema (File)</button><br><br>
+                                                        Update Schema</button><br><br>
         <h2>TESTs</h2>  
         <button type="button" onclick="test(document.getElementById('dsid').value,
                                             document.getElementById('schemaJSON').value),
-                                            document.getElementById('schemaFile').value">
-                                            Form Data v2</button><br><br>
+                                            document.getElementById('fileread').value">
+                                            Send Form Data</button><br><br>
       </div>
-      <div id="res" class="content"> Results here </div>
+      <div id="res" class="content"> Results will be displayed here </div>
       <div class="footer"> Google Cloud Search rocks ;-) </div>
     </div>
 
   </body>
+
+  <!-- This script needs the rest of the page to load first, so I put it here -->
+  <script type='text/javascript' language='javascript' src='js/test-ajax.js'/></script>
 
 </html>
