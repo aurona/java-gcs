@@ -9,7 +9,6 @@
         "sidebar sidebar"
         "content content"
         "footer footer";
-        /* grid-gap: 0px; */
 }
 body {
     color: #333333;
@@ -28,6 +27,7 @@ h2 {
 .title {
     grid-area: title;
     background-color: #4285F4;
+    border-bottom: 2px solid #ffffff;
     /* To center text correctly within a section, both vertically and horizontally */
     display: flex;
     justify-content: center;
@@ -35,18 +35,18 @@ h2 {
 }
 .header {
     grid-area: header;
-    background-color: #eeeeee;
-    border-top: 10px solid #eeeeee;
-    border-bottom: 10px solid #eeeeee;
-    border-left: 10px solid #eeeeee;
+    background-color: #DFEDF9;
+    border-top: 10px solid #DFEDF9;
+    border-bottom: 10px solid #DFEDF9;
+    border-left: 10px solid #DFEDF9;
     /* To center text correctly within a section, both vertically and horizontally */
     display: flex;
     align-items: center;
 }
 .sidebar {
     grid-area: sidebar;
-    background-color: #eeeeee;
-    border-left: 10px solid #eeeeee;
+    background-color: #DFEDF9;
+    border-left: 10px solid #DFEDF9;
 }
 .info {
     grid-area: info;

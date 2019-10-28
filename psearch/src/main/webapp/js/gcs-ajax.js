@@ -1,6 +1,5 @@
 // Global all methods
 var xhttp = getHTTPObject();
-var jsonschemastr = "";
 
 // Scripts to execute actions
 function getHTTPObject() {
@@ -24,12 +23,31 @@ function getHTTPObject() {
 } // end getHTTPObject
 
 
+function isJSON(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+}
+
 function handler() { // Call a function when the state changes.
         console.log("PHS LOG: handler start");
         if(xhttp.readyState == 4 && xhttp.status == 200) {
                 console.log("PHS LOG: handler inside if: " + xhttp.responseText);
-                //$("res").value = xhttp.responseText;
-                document.getElementById('res').innerHTML = xhttp.responseText;
+
+                if (isJSON(xhttp.responseText)) {
+                        console.log("PHS LOG: handler IS JSON");
+                        var jsonobject = JSON.parse(xhttp.responseText);
+                        console.log("PHS LOG: handler IS JSON");
+                        var jsonstring = JSON.stringify(jsonobject, null, 2);
+                        console.log("PHS LOG: handler IS JSON: " + jsonstring);
+                        document.getElementById('res').innerHTML = jsonstring;
+                } else {
+                        console.log("PHS LOG: handler IS NOT JSON");
+                        document.getElementById('res').innerHTML = xhttp.responseText;
+                }
         }
 
 } // end handler
