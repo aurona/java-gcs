@@ -43,7 +43,11 @@ h2 {
 }
 .info {
     grid-area: info;
-    background-color: #dddddd;
+    background-color: #ffffff;
+    /* To center text correctly within a section, both vertically and horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .sidebar {
     grid-area: sidebar;

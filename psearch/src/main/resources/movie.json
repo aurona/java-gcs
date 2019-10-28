@@ -1,0 +1,36 @@
+{
+    "objectDefinitions": [
+      {
+        "name": "movie",
+        "propertyDefinitions": [
+          {
+            "name": "movieTitle",
+            "isReturnable": true,
+            "textPropertyOptions": {
+              "retrievalImportance": { "importance": "HIGHEST" },
+              "operatorOptions": {
+                "operatorName": "title"
+              }
+            },
+            "displayOptions": {
+              "displayLabel": "Title"
+            }
+          },
+          {
+            "name": "releaseDate",
+            "isReturnable": true,
+            "isSortable": true,
+            "datePropertyOptions": {
+              "operatorOptions": {
+                "operatorName": "released",
+                "lessThanOperatorName": "releasedbefore",
+                "greaterThanOperatorName": "releasedafter"
+              }
+            },
+            "displayOptions": {
+              "displayLabel": "Release date"
+            }
+        ]
+      }
+    ]
+  }
