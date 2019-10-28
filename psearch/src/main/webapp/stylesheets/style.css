@@ -35,11 +35,18 @@ h2 {
 }
 .header {
     grid-area: header;
-    background-color: #dddddd;
-    min-height: 30px;
+    background-color: #eeeeee;
+    border-top: 10px solid #eeeeee;
+    border-bottom: 10px solid #eeeeee;
+    border-left: 10px solid #eeeeee;
     /* To center text correctly within a section, both vertically and horizontally */
     display: flex;
     align-items: center;
+}
+.sidebar {
+    grid-area: sidebar;
+    background-color: #eeeeee;
+    border-left: 10px solid #eeeeee;
 }
 .info {
     grid-area: info;
@@ -48,21 +55,26 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.sidebar {
-    grid-area: sidebar;
-    background-color: #eeeeee;
-}
-.content {
+    border-top: 10px solid #ffffff;
+    border-bottom: 10px solid #ffffff;
+    border-left: 10px solid #ffffff;
+    border-right: 10px solid #ffffff;
+}.content {
     grid-area: content;
     background-color: #ffffff;
     display: grid;
+    border-top: 10px solid #ffffff;
+    border-bottom: 10px solid #ffffff;
+    border-left: 10px solid #ffffff;
+    border-right: 10px solid #ffffff;
 }
 .footer {
     min-height: 20px;
     grid-area: footer;
     background-color: #34A853;
     color: #ffffff;
+    border-top: 10px solid #ffffff;
+    border-bottom: 10px solid #ffffff;
     /* To center text correctly within a section, both vertically and horizontally */
     display: flex;
     justify-content: center;
