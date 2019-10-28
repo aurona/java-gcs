@@ -40,9 +40,7 @@ function handler() { // Call a function when the state changes.
                 if (isJSON(xhttp.responseText)) {
                         console.log("PHS LOG: handler IS JSON");
                         var jsonobject = JSON.parse(xhttp.responseText);
-                        console.log("PHS LOG: handler IS JSON");
                         var jsonstring = JSON.stringify(jsonobject, null, 2);
-                        console.log("PHS LOG: handler IS JSON: " + jsonstring);
                         document.getElementById('res').innerHTML = jsonstring;
                 } else {
                         console.log("PHS LOG: handler IS NOT JSON");
