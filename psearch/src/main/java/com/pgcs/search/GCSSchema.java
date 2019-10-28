@@ -22,6 +22,8 @@ public class GCSSchema {
     * @param dataSourceId Unique ID of the datasource.
     */
     public String getSchema(String dataSourceId) {
+        GCSUtils.log("GCSSchema: getSchema start");
+
         String schemastr = "";
 
         try {
@@ -39,61 +41,6 @@ public class GCSSchema {
 
     } // end getSchema
 
-    /**
-    * Updates the schema of a datasource from a JSON string (no white spaes, etc)
-    * @param dataSourceId Unique ID of the datasource.
-    * @param newSchema New JSON schema for the datasource.
-    */
-    public String updateSchemaJSON(String dataSourceId, String schemastr) {
-        String result = "updateSchemaJSON";
-        
-        try {
-            // Authenticating Service Account
-            CloudSearch cloudSearch = buildAuthorizedClient();
-
-            String resourceName = String.format("datasources/%s", dataSourceId);
-
-            // Load the Schema from a string received
-            Schema schema;
-            schema = cloudSearch.getJsonFactory().fromString(schemastr, Schema.class);
-            UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
-
-            Operation operation = cloudSearch.indexing().datasources()
-                .updateSchema(resourceName, updateSchemaRequest)
-                .execute();
-
-            // This Operation is not syncronous. We have to wait and see when it finishes
-            while (operation.getDone() == null || operation.getDone() == false) {
-                // Wait before polling again
-                Thread.sleep(OPERATION_POLL_INTERVAL);
-                operation = cloudSearch.operations().get(operation.getName()).execute();
-            } // end while
-
-            // Operation is complete, check result
-            Status error = operation.getError();
-            if (error != null) {
-                result = "Error updating schema:" + error.getMessage();
-                System.err.println(result);
-            } else {
-                result = "Schema Updated. Execute Get Schema to check";
-                System.out.println(result);
-            }
-
-        } catch (GoogleJsonResponseException e) {
-            result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();
-            System.err.println(result);
-        } catch (IOException e) {
-            result = "EXCEPTION IOException: Unable to update schema: " + e.getMessage();
-            System.err.println(result);
-        } catch (InterruptedException e) {
-            result = "EXCEPTION: Interrupted while waiting for schema update: " + e.getMessage();
-            System.err.println(result);
-        }
-
-        return result;
-
-    } // end updateSchemaJSON
-
 
     /**
     * Updates the schema of a datasource from a file containing the JSON definition
@@ -101,6 +48,8 @@ public class GCSSchema {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchemaFile(String dataSourceId, String schemastr) {
+        GCSUtils.log("GCSSchema: updateSchemaFile start");
+
         String result = "updateSchemaFile";
         
         try {
@@ -149,6 +98,59 @@ public class GCSSchema {
         return result;
 
     } // end updateSchemaFile
+
+
+    /**
+    * Deletes the schema of a datasource
+    * @param dataSourceId Unique ID of the datasource.
+    */
+    public String deleteSchema(String dataSourceId) {
+        GCSUtils.log("GCSSchema: deleteSchema start");
+
+        String result = "Schema deleted. Use Get Schema to verify";
+
+        try {
+            // Authenticating Service Account
+            CloudSearch cloudSearch = buildAuthorizedClient();
+            String resourceName = String.format("datasources/%s", dataSourceId);
+
+            Operation operation = cloudSearch.indexing().datasources()
+                .deleteSchema(resourceName)
+                .execute();
+
+            // This Operation is not syncronous. We have to wait and see when it finishes
+            while (operation.getDone() == null || operation.getDone() == false) {
+                // Wait before polling again
+                Thread.sleep(OPERATION_POLL_INTERVAL);
+                operation = cloudSearch.operations().get(operation.getName()).execute();
+            } // end while
+
+            // Operation is complete, check result
+            Status error = operation.getError();
+            if (error != null) {
+                result = "Error updating schema:" + error.getMessage();
+                System.err.println(result);
+            } else {
+                result = "Schema Deleted. Execute Get Schema to check";
+                System.out.println(result);
+            }
+
+        } catch (GoogleJsonResponseException e) {
+            result = "EXCEPTION GoogleJsonResponseException: Unable to delete schema: " + e.getDetails();
+            System.err.println(result);
+        } catch (IOException e) {
+            result = "EXCEPTION IOException: Unable to delete schema: " + e.getMessage();
+            System.err.println(result);
+        } catch (InterruptedException e) {
+            result = "EXCEPTION: Interrupted while waiting for schema delete: " + e.getMessage();
+            System.err.println(result);
+        }
+
+        GCSUtils.log("GCSSchema: deleteSchema result: " + result);
+
+        return result;
+
+    } // end deleteSchema
 
 
     public String test(String dataSourceId, String schemastr) {

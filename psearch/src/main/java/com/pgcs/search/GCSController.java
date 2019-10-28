@@ -51,9 +51,6 @@ public class GCSController extends HttpServlet {
             case "getschema":
                 result = gcsschema.getSchema(datasourceid);
                 break;
-            case "updateschemajson":
-                result = gcsschema.updateSchemaJSON(datasourceid, schemastr);
-                break;
             case "test":
                 result = "PARAMS: " + datasourceid + " - " + schemastr; // gcsschema.test(datasourceid, schemastr);
                 break;

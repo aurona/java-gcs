@@ -48,7 +48,7 @@ function ajaxPostCall(params) {
 
 
 function ajaxPostCallFormData(fd) {
-        xhttp.open("POST", "/upload", true);
+        xhttp.open("POST", "/gcsfd", true);
 	// xhttp.setRequestHeader("Content-type", "multipart/form-data"); // If form-data, Servlet needs directive @MultipartConfig. But it actually fails and we have to remove this.
         xhttp.onreadystatechange = handler;
         xhttp.send(fd);
@@ -61,6 +61,8 @@ function getSchema(datasourceid) {
 } // end getSchema
 
 
+// Not in use right now, but to demonstrate how to pass simple JSON schemas encoded in URL
+// Please use updateSchemaFile instead
 function updateSchemaJSON(datasourceid, schemastr) {
         var params = "order=updateschemajson&datasourceid=" + datasourceid + "&schema=" + encodeURI(schemastr);
         console.log("PHS LOG: updateSchemaJSON params: " + params);
@@ -82,4 +84,16 @@ function updateSchemaFile(datasourceid) {
         ajaxPostCallFormData(formData);
 } // end updateSchemaFile
 
+
+function deleteSchema(datasourceid) {
+        console.log("PHS LOG: deleteSchema datasourceid: " + datasourceid);
+        var formData = new FormData();
+        formData.append('order', 'deleteschema');
+        formData.append('datasourceid', datasourceid);
+
+        // Display the values
+        for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
+
+        ajaxPostCallFormData(formData);
+} // end updateSchemaFile
 
