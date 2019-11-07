@@ -28,13 +28,13 @@ function onLoad() {
   /**
   * Client ID from OAuth credentials.
   */
-  var clientId = "...apps.googleusercontent.com";
+  var clientId = "45951142429-k11k2qfmvhphrdr88rn2naa2jl8g8jq6.apps.googleusercontent.com";
   
   /**
   * Full resource name of the search application, such as
   * "searchapplications/<your-id>".
   */
-  var searchApplicationName = "searchapplications/...";
+  var searchApplicationName = "searchapplications/default";
   // [END cloud_search_widget_config]
   
   /**
@@ -43,11 +43,14 @@ function onLoad() {
    * @returns Promise
    */
   function loadConfiguration() {
-    return fetch('/config.json').then(function(response) {
+    // Deploy this file in the same path as this HTML file and add the *.json as static files in app-engine.xml
+    return fetch('/configwidget.json').then(function(response) {
       return response.json();
     }).then(function(config) {
       this.clientId = config.clientId;
       this.searchApplicationName = config.searchAppId;
+      console.log("PHS LOG: loadConfiguration clientID: " + this.clientId);
+      console.log("PHS LOG: loadConfiguration searchApplicationName: " + this.searchApplicationName);
       return config;
     });
   }
@@ -59,9 +62,12 @@ function onLoad() {
    */
   function initializeApp() {
     // Load client ID & search app.
+console.log("PHS LOG: initializeApp 1");
     loadConfiguration().then(function() {
+console.log("PHS LOG: initializeApp 2");
       // Set API version to v1.
       gapi.config.update('cloudsearch.config/apiVersion', 'v1');
+console.log("PHS LOG: initializeApp 3");
   
       // Build the result container and bind to DOM elements.
       var resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
@@ -69,6 +75,7 @@ function onLoad() {
         .setSearchResultsContainerElement(document.getElementById('search_results'))
         .setFacetResultsContainerElement(document.getElementById('facet_results'))
         .build();
+console.log("PHS LOG: initializeApp 4");
   
       // Build the search box and bind to DOM elements.
       var searchBox = new gapi.cloudsearch.widget.searchbox.Builder()
@@ -77,8 +84,10 @@ function onLoad() {
         .setAnchor(document.getElementById('suggestions_anchor'))
         .setResultsContainer(resultsContainer)
         .build();
+console.log("PHS LOG: initializeApp 5");
     }).then(function() {
       // Init API/oauth client w/client ID.
+console.log("PHS LOG: initializeApp 6");
       return gapi.auth2.init({
           'clientId': clientId,
           'scope': 'https://www.googleapis.com/auth/cloud_search.query'

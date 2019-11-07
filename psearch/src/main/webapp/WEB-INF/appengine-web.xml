@@ -8,6 +8,8 @@
     <static-files>
         <include path="/**.html" expiration="10s">
         </include>
+        <include path="/**.json" expiration="10s">
+        </include>
         <include path="/stylesheets/**.css" expiration="10s">
             <http-header name="Content-Type" value="text/css" />
         </include>
