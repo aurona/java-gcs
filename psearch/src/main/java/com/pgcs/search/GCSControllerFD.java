@@ -27,18 +27,20 @@ public class GCSControllerFD extends HttpServlet {
         String datasourceid = request.getParameter("datasourceid");
         String schemajson   = request.getParameter("schemajson");
         String schemafile   = request.getParameter("schemafile");
-        //final Part filePart = request.getPart("file");
+        String searchquery  = request.getParameter("searchquery");
 
         GCSUtils.log("GCSControllerFD: ORDER: " + order);
         GCSUtils.log("GCSControllerFD: SOURCE ID: " + datasourceid);
         GCSUtils.log("GCSControllerFD: SCHEMA FILE JSON: " + schemajson);
         GCSUtils.log("GCSControllerFD: SCHEMA FILE CONTENT: " + schemafile);
+        GCSUtils.log("GCSControllerFD: SEARCH QUERY: " + searchquery);
 
         // Parameters in call URL: We decide which action to perform
         if (order == null) order = "test";
 
         // Instance of ourown GCSSchema class with methods to manipulate Schema in DataSource
         GCSSchema gcsschema = new GCSSchema();
+        GCSREST gcsrest = new GCSREST();
 
         // Depending on the order, we make the call
         switch (order) {
@@ -47,6 +49,9 @@ public class GCSControllerFD extends HttpServlet {
                 break;
             case "deleteschema":
                 result = gcsschema.deleteSchema(datasourceid);
+                break;
+            case "restsearch":
+                result = gcsrest.restSearch(searchquery);
                 break;
             case "test":
                 result = "TEST: " + order + " / " + datasourceid + " / " + schemajson + " / " + schemafile;

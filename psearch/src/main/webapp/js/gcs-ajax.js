@@ -113,3 +113,15 @@ function deleteSchema(datasourceid) {
         ajaxPostCallFormData(formData);
 } // end updateSchemaFile
 
+
+function restSearch(searchquery) {
+        console.log("PHS LOG: restSearch searchquery: " + searchquery);
+        var formData = new FormData();
+        formData.append('order', 'restsearch');
+        formData.append('searchquery', searchquery);
+
+        // Display the values
+        for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
+
+        ajaxPostCallFormData(formData);
+} // end updateSchemaFile

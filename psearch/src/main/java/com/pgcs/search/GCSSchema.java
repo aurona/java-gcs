@@ -3,10 +3,19 @@ package com.pgcs.search;
 import java.io.IOException;
 import java.util.Collections;
 
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+
 // PHS: cloud search api imports
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.util.Utils;
+
 import com.google.api.services.cloudsearch.v1.CloudSearch;
 import com.google.api.services.cloudsearch.v1.model.Operation;
 import com.google.api.services.cloudsearch.v1.model.Schema;
@@ -153,6 +162,74 @@ public class GCSSchema {
     } // end deleteSchema
 
 
+    /**
+    * Performs a Query to the index using the REST API directly
+    * @param searchQuery Search query to be made.
+    */
+    public String restSearch(String searchQuery) {
+        GCSUtils.log("GCSSchema: restSearch start");
+
+        String result = "REST Query API call didn't return anything";
+
+        try {
+            URL url = new URL("https://cloudsearch.googleapis.com/v1/query/search");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            GCSUtils.log("GCSSchema: restSearch STEP 1");
+    
+            //String input = "{\"qty\":100,\"name\":\"iPad 4\"}";
+            String input = "{\"requestOptions\":{\"searchApplicationId\":\"searchapplications/default\"},\"query\":\"gcs\"}";
+            GCSUtils.log("GCSSchema: restSearch STEP 2 Input: " + input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+            GCSUtils.log("GCSSchema: restSearch STEP 3");
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+            }
+            GCSUtils.log("GCSSchema: restSearch STEP 4");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            GCSUtils.log("GCSSchema: restSearch STEP 5");
+
+            String output;
+            GCSUtils.log("GCSSchema: restSearch Output from Server: \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+            }
+    
+            GCSUtils.log("GCSSchema: restSearch conn.disconnect");
+            conn.disconnect();
+    
+        } catch (MalformedURLException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+                e.printStackTrace();
+        } catch (RuntimeException e) {
+                e.printStackTrace();
+        }
+    
+        GCSUtils.log("GCSSchema: restSearch result: " + result);
+
+        return result;
+
+    } // end restSearch
+
+/*
+            {
+                "requestOptions": {
+                  "searchApplicationId": "searchapplications/default"
+                },
+                "query": "gcs"
+              }
+*/
+
+
+
     public String test(String dataSourceId, String schemastr) {
         String result = "test";
         GCSUtils.log("GCSSchema ***TEST***: Schema File: " + schemastr);
@@ -173,7 +250,7 @@ public class GCSSchema {
 
         return result;
 
-    } // end updateSchema
+    } // end test
 
 
 
