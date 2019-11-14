@@ -19,10 +19,12 @@ import com.google.api.client.googleapis.util.Utils;
 import com.google.api.services.cloudsearch.v1.CloudSearch;
 import com.google.api.services.cloudsearch.v1.model.Operation;
 import com.google.api.services.cloudsearch.v1.model.Schema;
+import com.google.api.services.cloudsearch.v1.CloudSearch.Query.Search; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/CloudSearch.Query.Search.html#Search-com.google.api.services.cloudsearch.v1.model.SearchRequest-
+import com.google.api.services.cloudsearch.v1.model.SearchRequest; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/model/class-use/SearchRequest.html
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 
-public class GCSSchema {
+public class GCSSDK {
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
@@ -31,7 +33,7 @@ public class GCSSchema {
     * @param dataSourceId Unique ID of the datasource.
     */
     public String getSchema(String dataSourceId) {
-        GCSUtils.log("GCSSchema: getSchema start");
+        GCSUtils.log("GCSSDK: getSchema start");
 
         String schemastr = "";
 
@@ -57,7 +59,7 @@ public class GCSSchema {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchemaFile(String dataSourceId, String schemastr) {
-        GCSUtils.log("GCSSchema: updateSchemaFile start");
+        GCSUtils.log("GCSSDK: updateSchemaFile start");
 
         String result = "updateSchemaFile";
         
@@ -114,7 +116,7 @@ public class GCSSchema {
     * @param dataSourceId Unique ID of the datasource.
     */
     public String deleteSchema(String dataSourceId) {
-        GCSUtils.log("GCSSchema: deleteSchema start");
+        GCSUtils.log("GCSSDK: deleteSchema start");
 
         String result = "Schema deleted. Use Get Schema to verify";
 
@@ -155,7 +157,7 @@ public class GCSSchema {
             System.err.println(result);
         }
 
-        GCSUtils.log("GCSSchema: deleteSchema result: " + result);
+        GCSUtils.log("GCSSDK: deleteSchema result: " + result);
 
         return result;
 
@@ -166,79 +168,35 @@ public class GCSSchema {
     * Performs a Query to the index using the REST API directly
     * @param searchQuery Search query to be made.
     */
-    public String restSearch(String searchQuery) {
-        GCSUtils.log("GCSSchema: restSearch start");
-
-        String result = "REST Query API call didn't return anything";
-
+    public String sdkSearch(String searchQuery) {
+        GCSUtils.log("GCSSDK: sdkSearch start");
+        String results = "";
+        
         try {
-            URL url = new URL("https://cloudsearch.googleapis.com/v1/query/search");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            GCSUtils.log("GCSSchema: restSearch STEP 1");
-    
-            //String input = "{\"qty\":100,\"name\":\"iPad 4\"}";
-            String input = "{\"requestOptions\":{\"searchApplicationId\":\"searchapplications/default\"},\"query\":\"gcs\"}";
-            GCSUtils.log("GCSSchema: restSearch STEP 2 Input: " + input);
-
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-            GCSUtils.log("GCSSchema: restSearch STEP 3");
-
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-            }
-            GCSUtils.log("GCSSchema: restSearch STEP 4");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-            GCSUtils.log("GCSSchema: restSearch STEP 5");
-
-            String output;
-            GCSUtils.log("GCSSchema: restSearch Output from Server: \n");
-            while ((output = br.readLine()) != null) {
-                System.out.println(output);
-            }
-    
-            GCSUtils.log("GCSSchema: restSearch conn.disconnect");
-            conn.disconnect();
-    
-        } catch (MalformedURLException e) {
-                e.printStackTrace();
+            SearchRequest sr = new SearchRequest();
+            sr.setQuery(searchQuery); // It can accept lots of parameters
+            CloudSearch cloudSearch = buildAuthorizedClient();
+            Search res = cloudSearch.query().search(sr);
+            res.execute();
         } catch (IOException e) {
-                e.printStackTrace();
-        } catch (RuntimeException e) {
-                e.printStackTrace();
+            System.err.println("Unable to get schema: " + e.getMessage());
         }
-    
-        GCSUtils.log("GCSSchema: restSearch result: " + result);
+     
+        return results;
 
-        return result;
-
-    } // end restSearch
-
-/*
-            {
-                "requestOptions": {
-                  "searchApplicationId": "searchapplications/default"
-                },
-                "query": "gcs"
-              }
-*/
+    } // end sdkSearch
 
 
 
     public String test(String dataSourceId, String schemastr) {
         String result = "test";
-        GCSUtils.log("GCSSchema ***TEST***: Schema File: " + schemastr);
+        GCSUtils.log("GCSSDK ***TEST***: Schema File: " + schemastr);
         
         try {
             Schema schema;
             CloudSearch cloudSearch = buildAuthorizedClient();
             schema = cloudSearch.getJsonFactory().fromString("{\"objectDefinitions\":[{\"name\":\"movie\"},{\"name\":\"person\"}]}", Schema.class);
-            GCSUtils.log("GCSSchema: ***TEST***: " + schema.toPrettyString());
+            GCSUtils.log("GCSSDK: ***TEST***: " + schema.toPrettyString());
             result = schema.toPrettyString();
         } catch (GoogleJsonResponseException e) {
             result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();

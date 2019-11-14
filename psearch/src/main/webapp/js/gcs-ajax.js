@@ -114,6 +114,19 @@ function deleteSchema(datasourceid) {
 } // end updateSchemaFile
 
 
+function sdkSearch(searchquery) {
+        console.log("PHS LOG: sdkSearch searchquery: " + searchquery);
+        var formData = new FormData();
+        formData.append('order', 'sdksearch');
+        formData.append('searchquery', searchquery);
+
+        // Display the values
+        for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
+
+        ajaxPostCallFormData(formData);
+} // end updateSchemaFile
+
+
 function restSearch(searchquery) {
         console.log("PHS LOG: restSearch searchquery: " + searchquery);
         var formData = new FormData();

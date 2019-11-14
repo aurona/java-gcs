@@ -44,12 +44,12 @@ public class GCSController extends HttpServlet {
         GCSUtils.log("GCSController: Order: " + order);
 
         // Instance of ourown GCSSchema class with methods to manipulate Schema in DataSource
-        GCSSchema gcsschema = new GCSSchema();
+        GCSSDK gcsSdk = new GCSSDK();
 
         // Depending on the order, we make the call
         switch (order) {
             case "getschema":
-                result = gcsschema.getSchema(datasourceid);
+                result = gcsSdk.getSchema(datasourceid);
                 break;
             case "test":
                 result = "PARAMS: " + datasourceid + " - " + schemastr; // gcsschema.test(datasourceid, schemastr);

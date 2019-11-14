@@ -38,20 +38,23 @@ public class GCSControllerFD extends HttpServlet {
         // Parameters in call URL: We decide which action to perform
         if (order == null) order = "test";
 
-        // Instance of ourown GCSSchema class with methods to manipulate Schema in DataSource
-        GCSSchema gcsschema = new GCSSchema();
-        GCSREST gcsrest = new GCSREST();
+        // Instance of ourown GCSSDK class with methods to manipulate Schema in DataSource
+        GCSSDK gcsSdk = new GCSSDK();
+        GCSREST gcsRest = new GCSREST();
 
         // Depending on the order, we make the call
         switch (order) {
             case "updateschemafile":
-                result = gcsschema.updateSchemaFile(datasourceid, schemafile);
+                result = gcsSdk.updateSchemaFile(datasourceid, schemafile);
                 break;
             case "deleteschema":
-                result = gcsschema.deleteSchema(datasourceid);
+                result = gcsSdk.deleteSchema(datasourceid);
+                break;
+            case "sdksearch":
+                result = gcsSdk.sdkSearch(searchquery);
                 break;
             case "restsearch":
-                result = gcsrest.restSearch(searchquery);
+                result = gcsRest.restSearch(searchquery);
                 break;
             case "test":
                 result = "TEST: " + order + " / " + datasourceid + " / " + schemajson + " / " + schemafile;
