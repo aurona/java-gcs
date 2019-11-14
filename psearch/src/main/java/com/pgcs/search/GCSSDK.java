@@ -10,6 +10,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
+// PHS: Needed for G Suite domain-wide delegation of authority
+import java.util.Collections;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.services.cloudsearch.v1.CloudSearch;
+import com.google.api.services.cloudsearch.v1.CloudSearchScopes;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 // PHS: cloud search api imports
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
@@ -25,6 +36,9 @@ import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 
 public class GCSSDK {
+
+    /** Path to the Service Account's Private Key file */
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "/pgcs-java-5a18a03f4bfe.json";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
@@ -175,11 +189,11 @@ public class GCSSDK {
         try {
             SearchRequest sr = new SearchRequest();
             sr.setQuery(searchQuery); // It can accept lots of parameters
-            CloudSearch cloudSearch = buildAuthorizedClient();
+            CloudSearch cloudSearch = getCloudSearchAPIService("pablohs@gcloudsearch.com");
             Search res = cloudSearch.query().search(sr);
             res.execute();
         } catch (IOException e) {
-            System.err.println("Unable to get schema: " + e.getMessage());
+            System.err.println("Unable to read key file: " + e.getMessage());
         }
      
         return results;
@@ -199,7 +213,7 @@ public class GCSSDK {
             GCSUtils.log("GCSSDK: ***TEST***: " + schema.toPrettyString());
             result = schema.toPrettyString();
         } catch (GoogleJsonResponseException e) {
-            result = "EXCEPTION GoogleJsonResponseException: Unable to update schema: " + e.getDetails();
+            result = "EXCEPTION GoogleJsonResponseException: Unable to TEST: " + e.getDetails();
             System.err.println(result);
         } catch (IOException e) {
             result = "EXCEPTION IOException: Unable to update schema: " + e.getMessage();
@@ -237,5 +251,48 @@ public class GCSSDK {
             .setApplicationName("default") // PHS: Name of Search Application with access to DataSource
             .build();
     } // end buildAuthorizedClient
+
+
+    /**
+     * Build and return a Cloud Search service object authorized with the service
+     * account that acts on behalf of the given user.
+     *
+     * @param userEmail The email of the user to impersonate. Needs permissions to access Cloud Search.
+     * @return CloudSearch service object that is ready to make requests.
+     */
+    public static CloudSearch getCloudSearchAPIService(String userEmail)
+        throws FileNotFoundException, IOException {
+
+        FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
+        
+        // The previous one is for files in the File System. This is a AppEngine, so we have to load a Resource.
+        // Version 1
+        //InputStream resourceStream = Thread.currentThread().getContextClassLoader()
+        //.getResourceAsStream("/WEB-INF/client_secrets.json");
+    
+        // Version 2
+        //clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        //new InputStreamReader(new FileInputStream(
+        //new File(SERVICE_ACCOUNT_FILE_PATH))));
+
+        GoogleCredential init = GoogleCredential.fromStream(credsFile);
+
+        HttpTransport httpTransport = init.getTransport();
+        JsonFactory jsonFactory = init.getJsonFactory();
+
+        GoogleCredential creds = new GoogleCredential.Builder()
+            .setTransport(httpTransport)
+            .setJsonFactory(jsonFactory)
+            .setServiceAccountId(init.getServiceAccountId())
+            .setServiceAccountPrivateKey(init.getServiceAccountPrivateKey())
+            .setServiceAccountScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH))
+            .setServiceAccountUser(userEmail)
+            .build();
+
+        CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds).build();
+
+        return service;
+    }
+
 
 } // end class
