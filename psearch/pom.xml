@@ -160,6 +160,18 @@
   <build>
     <!-- for hot reload of the web application-->
     <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+    
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+           <include>**/*.properties</include>
+           <include>**/*.json</include>
+        </includes>
+      </resource>
+    </resources>
+
+    
     <plugins>
       <plugin>
         <groupId>com.google.cloud.tools</groupId>

@@ -1,6 +1,7 @@
 package com.pgcs.search;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 
 import java.net.URL;
@@ -193,7 +194,9 @@ public class GCSSDK {
             Search res = cloudSearch.query().search(sr);
             res.execute();
         } catch (IOException e) {
-            System.err.println("Unable to read key file: " + e.getMessage());
+            results = "GCSSDK: sdkSearch: Unable to read key file";
+            System.err.println(results);
+            System.err.println(e.getMessage());
         }
      
         return results;
@@ -263,12 +266,11 @@ public class GCSSDK {
     public static CloudSearch getCloudSearchAPIService(String userEmail)
         throws FileNotFoundException, IOException {
 
-        FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
+        //FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
         
         // The previous one is for files in the File System. This is a AppEngine, so we have to load a Resource.
         // Version 1
-        //InputStream resourceStream = Thread.currentThread().getContextClassLoader()
-        //.getResourceAsStream("/WEB-INF/client_secrets.json");
+        InputStream credsFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(SERVICE_ACCOUNT_FILE_PATH);
     
         // Version 2
         //clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
