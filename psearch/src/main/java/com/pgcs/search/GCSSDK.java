@@ -30,6 +30,7 @@ import com.google.api.client.googleapis.util.Utils;
 
 import com.google.api.services.cloudsearch.v1.CloudSearch;
 import com.google.api.services.cloudsearch.v1.model.Operation;
+import com.google.api.services.cloudsearch.v1.model.RequestOptions;
 import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.CloudSearch.Query.Search; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/CloudSearch.Query.Search.html#Search-com.google.api.services.cloudsearch.v1.model.SearchRequest-
 import com.google.api.services.cloudsearch.v1.model.SearchRequest; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/model/class-use/SearchRequest.html
@@ -39,7 +40,7 @@ import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 public class GCSSDK {
 
     /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "/pgcs-java-5a18a03f4bfe.json";
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "pgcs-java-5a18a03f4bfe.json";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
@@ -188,17 +189,49 @@ public class GCSSDK {
         String results = "";
         
         try {
+            GCSUtils.log("GCSSDK: sdkSearch in try");
+            CloudSearch cloudSearch = getCloudSearchAPIService("pablohs@gcloudsearch.com");
+            GCSUtils.log("GCSSDK: sdkSearch after getCloudSearchAPIService");
+
+            // We create the base Query object with the query string
             SearchRequest sr = new SearchRequest();
             sr.setQuery(searchQuery); // It can accept lots of parameters
-            CloudSearch cloudSearch = getCloudSearchAPIService("pablohs@gcloudsearch.com");
-            Search res = cloudSearch.query().search(sr);
+            GCSUtils.log("GCSSDK: sdkSearch step 1");
+            
+            // Create the Request Options part of the JSON call
+            RequestOptions ro = new RequestOptions();
+            ro.setSearchApplicationId("searchapplications/default");
+            sr.setRequestOptions(ro);
+            GCSUtils.log("GCSSDK: sdkSearch step 2");
+            
+            // Execute the Search and get the results
+            Search res = cloudSearch.query().search(sr);        
+            GCSUtils.log("GCSSDK: sdkSearch step 3");
             res.execute();
+            GCSUtils.log("GCSSDK: sdkSearch step 4");
         } catch (IOException e) {
-            results = "GCSSDK: sdkSearch: Unable to read key file";
+            results = "GCSSDK: sdkSearch: IO Exception";
             System.err.println(results);
             System.err.println(e.getMessage());
         }
-     
+       
+        /* From Accenture - Intesa
+        CloudSearch c = CloudSearchClient.getCloudSearchAPIService("cloud@cloudfirstitaly.com");//"service-account@isp-aem-gcs.iam.gserviceaccount.com");
+        com.google.api.services.cloudsearch.v1.model.SearchRequest search = new com.google.api.services.cloudsearch.v1.model.SearchRequest();
+        search.setDataSourceRestrictions(request.getDataSourceRestrictions());
+        search.setFacetOptions(request.getFacetOptions());
+        search.setPageSize(request.getPageSize());
+        search.setQuery(request.getQuery());
+        search.setQueryInterpretationOptions(request.getQueryInterpretationOptions());
+        search.setRequestOptions(request.getRequestOptions());
+        search.setSortOptions(request.getSortOptions());
+        search.setStart(request.getStart());
+        RequestOptions opt = new RequestOptions();
+        opt.setSearchApplicationId("searchapplications/77f24de307e6d0634bb2c9803ddcfb3b");
+        search.setQuery("comunicati");
+        search.setRequestOptions(opt);
+        */
+
         return results;
 
     } // end sdkSearch
@@ -265,22 +298,25 @@ public class GCSSDK {
      */
     public static CloudSearch getCloudSearchAPIService(String userEmail)
         throws FileNotFoundException, IOException {
+        GCSUtils.log("GCSSDK getCloudSearchAPIService start: email: " + userEmail);
 
-        //FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
+        // This does not work from AppEngine, only from Standalone Java: FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream credsFile = classLoader.getResourceAsStream(SERVICE_ACCOUNT_FILE_PATH); // File name does not have the initial '/'. It is the file name who would be stores in WEB-INF/classes
         
-        // The previous one is for files in the File System. This is a AppEngine, so we have to load a Resource.
-        // Version 1
-        InputStream credsFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(SERVICE_ACCOUNT_FILE_PATH);
-    
-        // Version 2
-        //clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-        //new InputStreamReader(new FileInputStream(
-        //new File(SERVICE_ACCOUNT_FILE_PATH))));
-
         GoogleCredential init = GoogleCredential.fromStream(credsFile);
 
         HttpTransport httpTransport = init.getTransport();
         JsonFactory jsonFactory = init.getJsonFactory();
+
+        GCSUtils.log("GCSSDK getCloudSearchAPIService file: " + credsFile.toString());
+        GCSUtils.log("GCSSDK getCloudSearchAPIService httpTransport: " + init.getTransport());
+        GCSUtils.log("GCSSDK getCloudSearchAPIService jsonFactory: " + init.getJsonFactory());
+        GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountId: " + init.getServiceAccountId());
+        GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountPrivateKey: " + init.getServiceAccountPrivateKey());
+        GCSUtils.log("GCSSDK getCloudSearchAPIService CloudSearchScopes.CLOUD_SEARCH: " + CloudSearchScopes.CLOUD_SEARCH);
+        GCSUtils.log("GCSSDK getCloudSearchAPIService userEmail: " + userEmail);
 
         GoogleCredential creds = new GoogleCredential.Builder()
             .setTransport(httpTransport)
@@ -291,7 +327,9 @@ public class GCSSDK {
             .setServiceAccountUser(userEmail)
             .build();
 
-        CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds).build();
+        CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds)
+            .setApplicationName("psearch")
+            .build();
 
         return service;
     }
