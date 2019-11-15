@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
-// PHS: Needed for G Suite domain-wide delegation of authority
+// PHS: Needed for G Suite domain-wide delegation of authority: 
 import java.util.Collections;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -205,14 +205,15 @@ public class GCSSDK {
             GCSUtils.log("GCSSDK: sdkSearch step 2");
             
             // Execute the Search and get the results
-            Search res = cloudSearch.query().search(sr);        
+            Search res = cloudSearch.query().search(sr); 
             GCSUtils.log("GCSSDK: sdkSearch step 3");
-            res.execute();
+            Object o = res.execute();
             GCSUtils.log("GCSSDK: sdkSearch step 4");
         } catch (IOException e) {
             results = "GCSSDK: sdkSearch: IO Exception";
             System.err.println(results);
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
        
         /* From Accenture - Intesa
@@ -328,7 +329,7 @@ public class GCSSDK {
             .build();
 
         CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds)
-            .setApplicationName("psearch")
+            .setApplicationName("default") // Is the Application name relevant?
             .build();
 
         return service;
