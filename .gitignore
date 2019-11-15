@@ -1,8 +1,8 @@
-psearch/.factorypath
-psearch/.project
-psearch/.classpath
-psearch/.settings
-psearch/target
-psearch/src/main/resources/keys/*.json
+/psearch/.factorypath
+/psearch/.project
+/psearch/.classpath
+/psearch/.settings
+/psearch/target
+keys/
 *.code-workspace
 *.class
