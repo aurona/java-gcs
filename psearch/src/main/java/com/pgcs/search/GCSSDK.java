@@ -40,7 +40,7 @@ import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 public class GCSSDK {
 
     /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "pgcs-java-5a18a03f4bfe.json";
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-61730cf74a3a.json";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
