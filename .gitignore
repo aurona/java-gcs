@@ -3,6 +3,6 @@ psearch/.project
 psearch/.classpath
 psearch/.settings
 psearch/target
-psearch/src/resources/keys/*.json
+psearch/src/main/resources/keys/*.json
 *.code-workspace
 *.class
