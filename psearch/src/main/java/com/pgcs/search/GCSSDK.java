@@ -82,17 +82,24 @@ public class GCSSDK {
         try {
             // Authenticating Service Account
             CloudSearch cloudSearch = buildAuthorizedClient();
+            GCSUtils.log("GCSSDK: updateSchemaFile step 1");
 
             String resourceName = String.format("datasources/%s", dataSourceId);
+            GCSUtils.log("GCSSDK: updateSchemaFile resourceName: " + resourceName);
 
             // Load the Schema from a string received
             Schema schema;
             schema = cloudSearch.getJsonFactory().fromString(schemastr, Schema.class);
+            GCSUtils.log("GCSSDK: updateSchemaFile step 2");
+
             UpdateSchemaRequest updateSchemaRequest  = new UpdateSchemaRequest().setSchema(schema);
+
+            GCSUtils.log("GCSSDK: updateSchemaFile step 3");
 
             Operation operation = cloudSearch.indexing().datasources()
                 .updateSchema(resourceName, updateSchemaRequest)
                 .execute();
+            GCSUtils.log("GCSSDK: updateSchemaFile step 4");
 
             // This Operation is not syncronous. We have to wait and see when it finishes
             while (operation.getDone() == null || operation.getDone() == false) {
@@ -190,7 +197,7 @@ public class GCSSDK {
         
         try {
             GCSUtils.log("GCSSDK: sdkSearch in try");
-            CloudSearch cloudSearch = getCloudSearchAPIService("pablohs@gcloudsearch.com");
+            CloudSearch cloudSearch = getCloudSearchAPIService("pablo@gcloudsearch.com");
             GCSUtils.log("GCSSDK: sdkSearch after getCloudSearchAPIService");
 
             // We create the base Query object with the query string
@@ -216,7 +223,7 @@ public class GCSSDK {
             e.printStackTrace();
         }
        
-        /* From Accenture - Intesa
+        /* From customer
         CloudSearch c = CloudSearchClient.getCloudSearchAPIService("cloud@cloudfirstitaly.com");//"service-account@isp-aem-gcs.iam.gserviceaccount.com");
         com.google.api.services.cloudsearch.v1.model.SearchRequest search = new com.google.api.services.cloudsearch.v1.model.SearchRequest();
         search.setDataSourceRestrictions(request.getDataSourceRestrictions());
@@ -285,7 +292,7 @@ public class GCSSDK {
             Utils.getDefaultTransport(),
             Utils.getDefaultJsonFactory(),
             credential)
-            .setApplicationName("default") // PHS: Name of Search Application with access to DataSource
+            .setApplicationName("default") // PHS: Name of Search Application with access to DataSource?
             .build();
     } // end buildAuthorizedClient
 

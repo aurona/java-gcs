@@ -1,0 +1,214 @@
+{
+      "objectDefinitions": [
+        {
+          "name": "films",
+          "options": {
+            "displayOptions": {
+              "objectDisplayLabel": "Film",
+              "metalines": [
+                {
+                  "properties": [
+                    {
+                      "propertyName": "title"
+                    },
+                    {
+                      "propertyName": "release_year"
+                    },
+                    {
+                      "propertyName": "rating"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "propertyDefinitions": [
+            {
+              "name": "film_id",
+              "isReturnable": false,
+              "isRepeatable": false,
+              "isFacetable": false,
+              "displayOptions": {
+                "displayLabel": "Film ID"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "filmid"
+                }
+              }
+            },
+            {
+              "name": "title",
+              "isReturnable": true,
+              "isRepeatable": true,
+              "isFacetable": false,
+              "displayOptions": {
+                "displayLabel": "Title"
+              },
+              "textPropertyOptions": {
+                "retrievalImportance": { "importance": "HIGHEST" },
+                "operatorOptions": {
+                  "operatorName": "title"
+                }
+              }
+            },
+            {
+              "name": "description",
+              "isReturnable": true,
+              "isFacetable": false,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Description"
+              },
+              "textPropertyOptions": {
+                "retrievalImportance": { "importance": "HIGHEST" },
+                "operatorOptions": {
+                  "operatorName": "description"
+                }
+              }
+            },
+            {
+              "name": "release_year",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Release Year"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "releaseyear"
+                }
+              }
+            },
+            {
+              "name": "language_id",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Language"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "language"
+                }
+              }
+            },
+            {
+              "name": "original_language_id",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Original Language"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "originallanguage"
+                }
+              }
+            },
+            {
+              "name": "rental_duration",
+              "isReturnable": false,
+              "isFacetable": false,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Rental Duration"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "rentalduration"
+                }
+              }
+            },
+            {
+              "name": "rental_rate",
+              "isReturnable": false,
+              "isFacetable": false,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Rental Rate"
+              },
+              "doublePropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "rentalrate"
+                }
+              }
+            }, 
+            {
+              "name": "length",
+              "isReturnable": true,
+              "isFacetable": false,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Length"
+              },
+              "integerPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "length"
+                }
+              }
+            },
+            {
+              "name": "replacement_cost",
+              "isReturnable": false,
+              "isFacetable": false,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Replacement Cost"
+              },
+              "doublePropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "replacementcost"
+                }
+              }
+            },        
+            {
+              "name": "rating",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Rating"
+              },
+              "textPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "rating"
+                }
+              }
+            }, 
+            {
+              "name": "special_features",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Special Features"
+              },
+              "textPropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "specialfeatures"
+                }
+              }
+            },             
+            {
+              "name": "last_update",
+              "isReturnable": true,
+              "isFacetable": true,
+              "isRepeatable": true,
+              "displayOptions": {
+                "displayLabel": "Last Update"
+              },
+              "datePropertyOptions": {
+                "operatorOptions": {
+                  "operatorName": "lastupdate"
+                }
+              }
+            }
+          ]
+        }
+      ] 
+  }
+  
