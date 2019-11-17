@@ -111,7 +111,7 @@ function deleteSchema(datasourceid) {
         for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
 
         ajaxPostCallFormData(formData);
-} // end updateSchemaFile
+} // end deleteSchema
 
 
 function sdkSearch(searchquery) {
@@ -124,7 +124,7 @@ function sdkSearch(searchquery) {
         for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
 
         ajaxPostCallFormData(formData);
-} // end updateSchemaFile
+} // end sdkSearch
 
 
 function restSearch(searchquery) {
@@ -137,4 +137,4 @@ function restSearch(searchquery) {
         for (var value of formData.values()) console.log(">>>>>>>>>>> " + value);
 
         ajaxPostCallFormData(formData);
-} // end updateSchemaFile
+} // end restSearch

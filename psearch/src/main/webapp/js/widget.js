@@ -28,7 +28,7 @@ function onLoad() {
   /**
   * Client ID from OAuth credentials.
   */
-  var clientId = "45951142429-k11k2qfmvhphrdr88rn2naa2jl8g8jq6.apps.googleusercontent.com";
+  var clientId = "45951142429-u5lu9v3o843gsuh8ap3lfncfmhag5888.apps.googleusercontent.com";
   
   /**
   * Full resource name of the search application, such as
@@ -44,11 +44,11 @@ function onLoad() {
    */
   function loadConfiguration() {
     // Deploy this file in the same path as this HTML file and add the *.json as static files in app-engine.xml
-    return fetch('/configwidget.json').then(function(response) {
+    return fetch('widgetconfig.json').then(function(response) {
       return response.json();
     }).then(function(config) {
-      this.clientId = config.clientId;
-      this.searchApplicationName = config.searchAppId;
+      //this.clientId = config.clientId;
+      //this.searchApplicationName = config.searchAppId;
       console.log("PHS LOG: loadConfiguration clientID: " + this.clientId);
       console.log("PHS LOG: loadConfiguration searchApplicationName: " + this.searchApplicationName);
       return config;

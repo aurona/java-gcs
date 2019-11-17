@@ -17,20 +17,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+// PHS: cloud search api imports
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.services.cloudsearch.v1.CloudSearch;
 import com.google.api.services.cloudsearch.v1.CloudSearchScopes;
+import com.google.api.services.cloudsearch.v1.model.RequestOptions;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-// PHS: cloud search api imports
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.util.Utils;
-
-import com.google.api.services.cloudsearch.v1.CloudSearch;
 import com.google.api.services.cloudsearch.v1.model.Operation;
-import com.google.api.services.cloudsearch.v1.model.RequestOptions;
 import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.CloudSearch.Query.Search; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/CloudSearch.Query.Search.html#Search-com.google.api.services.cloudsearch.v1.model.SearchRequest-
 import com.google.api.services.cloudsearch.v1.model.SearchRequest; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/model/class-use/SearchRequest.html
@@ -40,7 +37,8 @@ import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 public class GCSSDK {
 
     /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-61730cf74a3a.json";
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-1f74d1ea58ab-pgcs-sa.json";
+    private static final String USER_TO_IMPERSONATE = "pablohs@gcloudsearch.com";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
@@ -75,7 +73,7 @@ public class GCSSDK {
     * @param newSchema New JSON schema for the datasource.
     */
     public String updateSchemaFile(String dataSourceId, String schemastr) {
-        GCSUtils.log("GCSSDK: updateSchemaFile start");
+        GCSUtils.log("GCSSDK: updateSchemaFile start: datasource: " + dataSourceId);
 
         String result = "updateSchemaFile";
         
@@ -197,7 +195,7 @@ public class GCSSDK {
         
         try {
             GCSUtils.log("GCSSDK: sdkSearch in try");
-            CloudSearch cloudSearch = getCloudSearchAPIService("pablo@gcloudsearch.com");
+            CloudSearch cloudSearch = getCloudSearchAPIService(USER_TO_IMPERSONATE);
             GCSUtils.log("GCSSDK: sdkSearch after getCloudSearchAPIService");
 
             // We create the base Query object with the query string
@@ -304,9 +302,9 @@ public class GCSSDK {
      * @param userEmail The email of the user to impersonate. Needs permissions to access Cloud Search.
      * @return CloudSearch service object that is ready to make requests.
      */
-    public static CloudSearch getCloudSearchAPIService(String userEmail)
+    public static CloudSearch getCloudSearchAPIService(String userToImpersonate)
         throws FileNotFoundException, IOException {
-        GCSUtils.log("GCSSDK getCloudSearchAPIService start: email: " + userEmail);
+        GCSUtils.log("GCSSDK getCloudSearchAPIService start: email: " + userToImpersonate);
 
         // This does not work from AppEngine, only from Standalone Java: FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
 
@@ -324,7 +322,7 @@ public class GCSSDK {
         GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountId: " + init.getServiceAccountId());
         GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountPrivateKey: " + init.getServiceAccountPrivateKey());
         GCSUtils.log("GCSSDK getCloudSearchAPIService CloudSearchScopes.CLOUD_SEARCH: " + CloudSearchScopes.CLOUD_SEARCH);
-        GCSUtils.log("GCSSDK getCloudSearchAPIService userEmail: " + userEmail);
+        GCSUtils.log("GCSSDK getCloudSearchAPIService userEmail: " + userToImpersonate);
 
         GoogleCredential creds = new GoogleCredential.Builder()
             .setTransport(httpTransport)
@@ -332,7 +330,7 @@ public class GCSSDK {
             .setServiceAccountId(init.getServiceAccountId())
             .setServiceAccountPrivateKey(init.getServiceAccountPrivateKey())
             .setServiceAccountScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH))
-            .setServiceAccountUser(userEmail)
+            .setServiceAccountUser(userToImpersonate)
             .build();
 
         CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds)

@@ -22,9 +22,8 @@
         <h1>Google Cloud Search</h1>
       </div>
       <div class="header">
-          DatasourceID:  &nbsp; <input type="text" value="c1daac23a76ec19da2795a7d778054c8" name="dsid" id="dsid"> &nbsp;&nbsp;
+          DatasourceID:  &nbsp; <input type="text" value="c1daac23a76ec19d32e6cd5f1183e2b9" name="dsid" id="dsid"> &nbsp;&nbsp;
           Schema: &nbsp; <input type="file" value="" name="schemaFile" id="schemaFile"> &nbsp;&nbsp;
-          Query: &nbsp; <input type="text" value="" name="searchquery" id="searchquery"> &nbsp;&nbsp;
         </div>
       <div class="info">
         <textarea style="width:100%;height: 300px" name="fileread" id="fileread"></textarea>
@@ -37,6 +36,7 @@
         <button type="button" onclick="deleteSchema(document.getElementById('dsid').value)">
                                                     Delete Schema</button><br><br>
         <h2>SEARCH</h2>  
+        Query: &nbsp; <input type="text" value="" name="searchquery" id="searchquery"> &nbsp;&nbsp;
         <button type="button" onclick="sdkSearch(document.getElementById('searchquery').value)">SDK Search</button><br><br>
         <button type="button" onclick="restSearch(document.getElementById('searchquery').value)">REST Search</button><br><br>
         <!--
