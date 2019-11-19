@@ -31,13 +31,14 @@ import com.google.api.services.cloudsearch.v1.model.Operation;
 import com.google.api.services.cloudsearch.v1.model.Schema;
 import com.google.api.services.cloudsearch.v1.CloudSearch.Query.Search; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/CloudSearch.Query.Search.html#Search-com.google.api.services.cloudsearch.v1.model.SearchRequest-
 import com.google.api.services.cloudsearch.v1.model.SearchRequest; // https://developers.google.com/resources/api-libraries/documentation/cloudsearch/v1/java/latest/com/google/api/services/cloudsearch/v1/model/class-use/SearchRequest.html
+import com.google.api.services.cloudsearch.v1.model.SearchResponse;
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 
 public class GCSSDK {
 
     /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-1f74d1ea58ab-pgcs-sa.json";
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-ad8abc954a33.json";
     private static final String USER_TO_IMPERSONATE = "pablohs@gcloudsearch.com";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
@@ -210,10 +211,11 @@ public class GCSSDK {
             GCSUtils.log("GCSSDK: sdkSearch step 2");
             
             // Execute the Search and get the results
-            Search res = cloudSearch.query().search(sr); 
+            Search srch = cloudSearch.query().search(sr); 
             GCSUtils.log("GCSSDK: sdkSearch step 3");
-            Object o = res.execute();
-            GCSUtils.log("GCSSDK: sdkSearch step 4");
+            SearchResponse res = srch.execute();
+            GCSUtils.log("GCSSDK: sdkSearch result: " + res.toPrettyString());
+            results = res.toPrettyString();
         } catch (IOException e) {
             results = "GCSSDK: sdkSearch: IO Exception";
             System.err.println(results);
@@ -329,7 +331,7 @@ public class GCSSDK {
             .setJsonFactory(jsonFactory)
             .setServiceAccountId(init.getServiceAccountId())
             .setServiceAccountPrivateKey(init.getServiceAccountPrivateKey())
-            .setServiceAccountScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH))
+            .setServiceAccountScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH_QUERY))
             .setServiceAccountUser(userToImpersonate)
             .build();
 
