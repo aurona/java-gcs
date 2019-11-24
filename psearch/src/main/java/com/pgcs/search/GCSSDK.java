@@ -38,7 +38,7 @@ import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 public class GCSSDK {
 
     /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-ad8abc954a33.json";
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-key.json";
     private static final String USER_TO_IMPERSONATE = "pablohs@gcloudsearch.com";
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
