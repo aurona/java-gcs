@@ -41,7 +41,8 @@ public class GCSControllerFD extends HttpServlet {
         // Instance of ourown GCSSDK class with methods to manipulate Schema in DataSource
         GCSSDK gcsSdk = new GCSSDK();
         GCSREST gcsRest = new GCSREST();
-
+        DWDProxy dwdProxy = new DWDProxy();
+        
         // Depending on the order, we make the call
         switch (order) {
             case "updateschemafile":
@@ -51,7 +52,7 @@ public class GCSControllerFD extends HttpServlet {
                 result = gcsSdk.deleteSchema(datasourceid);
                 break;
             case "sdksearch":
-                result = gcsSdk.sdkSearch(searchquery);
+                result = dwdProxy.sdkSearch(searchquery);
                 break;
             case "restsearch":
                 result = gcsRest.restSearch(searchquery);
