@@ -47,6 +47,21 @@
             schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class); 
         }
 
+        /* DWD proxy 
+        CloudSearch c = CloudSearchClient.getCloudSearchAPIService("domainuser@mydomain.com");
+        com.google.api.services.cloudsearch.v1.model.SearchRequest search = new com.google.api.services.cloudsearch.v1.model.SearchRequest();
+        search.setDataSourceRestrictions(request.getDataSourceRestrictions());
+        search.setFacetOptions(request.getFacetOptions());
+        search.setPageSize(request.getPageSize());
+        search.setQuery(request.getQuery());
+        search.setQueryInterpretationOptions(request.getQueryInterpretationOptions());
+        search.setRequestOptions(request.getRequestOptions());
+        search.setSortOptions(request.getSortOptions());
+        search.setStart(request.getStart());
+        RequestOptions opt = new RequestOptions();
+        opt.setSearchApplicationId("searchapplications/xxxxxxxxxxxxxxxxxxxxxx");
+        search.setQuery("comunicati");
+        search.setRequestOptions(opt);
 
 
         */
