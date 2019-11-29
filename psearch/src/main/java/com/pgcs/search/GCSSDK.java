@@ -35,11 +35,13 @@ import com.google.api.services.cloudsearch.v1.model.SearchResponse;
 import com.google.api.services.cloudsearch.v1.model.Status;
 import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
 
-public class GCSSDK {
+// PHS: New google-auth-library for Credentials
+import com.google.appengine.api.appidentity.AppIdentityService;
+import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
+import com.google.auth.Credentials;
+import com.google.auth.appengine.AppEngineCredentials;
 
-    /** Path to the Service Account's Private Key file */
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "keys/pgcs-java-key.json";
-    private static final String USER_TO_IMPERSONATE = "pablohs@gcloudsearch.com";
+public class GCSSDK {
 
     public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
@@ -186,66 +188,6 @@ public class GCSSDK {
     } // end deleteSchema
 
 
-    /**
-    * Performs a Query to the index using the REST API directly
-    * @param searchQuery Search query to be made.
-    */
-    public String sdkSearch(String searchQuery) {
-        GCSUtils.log("GCSSDK: sdkSearch start");
-        String results = "";
-        
-        try {
-            GCSUtils.log("GCSSDK: sdkSearch in try");
-            CloudSearch cloudSearch = getCloudSearchAPIService(USER_TO_IMPERSONATE);
-            GCSUtils.log("GCSSDK: sdkSearch after getCloudSearchAPIService");
-
-            // We create the base Query object with the query string
-            SearchRequest sr = new SearchRequest();
-            sr.setQuery(searchQuery); // It can accept lots of parameters
-            GCSUtils.log("GCSSDK: sdkSearch step 1");
-            
-            // Create the Request Options part of the JSON call
-            RequestOptions ro = new RequestOptions();
-            ro.setSearchApplicationId("searchapplications/default");
-            sr.setRequestOptions(ro);
-            GCSUtils.log("GCSSDK: sdkSearch step 2");
-            
-            // Execute the Search and get the results
-            Search srch = cloudSearch.query().search(sr); 
-            GCSUtils.log("GCSSDK: sdkSearch step 3");
-            SearchResponse res = srch.execute();
-            GCSUtils.log("GCSSDK: sdkSearch result: " + res.toPrettyString());
-            results = res.toPrettyString();
-        } catch (IOException e) {
-            results = "GCSSDK: sdkSearch: IO Exception";
-            System.err.println(results);
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }
-       
-        /* From customer
-        CloudSearch c = CloudSearchClient.getCloudSearchAPIService("cloud@cloudfirstitaly.com");//"service-account@isp-aem-gcs.iam.gserviceaccount.com");
-        com.google.api.services.cloudsearch.v1.model.SearchRequest search = new com.google.api.services.cloudsearch.v1.model.SearchRequest();
-        search.setDataSourceRestrictions(request.getDataSourceRestrictions());
-        search.setFacetOptions(request.getFacetOptions());
-        search.setPageSize(request.getPageSize());
-        search.setQuery(request.getQuery());
-        search.setQueryInterpretationOptions(request.getQueryInterpretationOptions());
-        search.setRequestOptions(request.getRequestOptions());
-        search.setSortOptions(request.getSortOptions());
-        search.setStart(request.getStart());
-        RequestOptions opt = new RequestOptions();
-        opt.setSearchApplicationId("searchapplications/77f24de307e6d0634bb2c9803ddcfb3b");
-        search.setQuery("comunicati");
-        search.setRequestOptions(opt);
-        */
-
-        return results;
-
-    } // end sdkSearch
-
-
-
     public String test(String dataSourceId, String schemastr) {
         String result = "test";
         GCSUtils.log("GCSSDK ***TEST***: Schema File: " + schemastr);
@@ -296,51 +238,6 @@ public class GCSSDK {
             .build();
     } // end buildAuthorizedClient
 
-
-    /**
-     * Build and return a Cloud Search service object authorized with the service
-     * account that acts on behalf of the given user.
-     *
-     * @param userEmail The email of the user to impersonate. Needs permissions to access Cloud Search.
-     * @return CloudSearch service object that is ready to make requests.
-     */
-    public static CloudSearch getCloudSearchAPIService(String userToImpersonate)
-        throws FileNotFoundException, IOException {
-        GCSUtils.log("GCSSDK getCloudSearchAPIService start: email: " + userToImpersonate);
-
-        // This does not work from AppEngine, only from Standalone Java: FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream credsFile = classLoader.getResourceAsStream(SERVICE_ACCOUNT_FILE_PATH); // File name does not have the initial '/'. It is the file name who would be stores in WEB-INF/classes
-        
-        GoogleCredential init = GoogleCredential.fromStream(credsFile);
-
-        HttpTransport httpTransport = init.getTransport();
-        JsonFactory jsonFactory = init.getJsonFactory();
-
-        GCSUtils.log("GCSSDK getCloudSearchAPIService file: " + credsFile.toString());
-        GCSUtils.log("GCSSDK getCloudSearchAPIService httpTransport: " + init.getTransport());
-        GCSUtils.log("GCSSDK getCloudSearchAPIService jsonFactory: " + init.getJsonFactory());
-        GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountId: " + init.getServiceAccountId());
-        GCSUtils.log("GCSSDK getCloudSearchAPIService getServiceAccountPrivateKey: " + init.getServiceAccountPrivateKey());
-        GCSUtils.log("GCSSDK getCloudSearchAPIService CloudSearchScopes.CLOUD_SEARCH: " + CloudSearchScopes.CLOUD_SEARCH);
-        GCSUtils.log("GCSSDK getCloudSearchAPIService userEmail: " + userToImpersonate);
-
-        GoogleCredential creds = new GoogleCredential.Builder()
-            .setTransport(httpTransport)
-            .setJsonFactory(jsonFactory)
-            .setServiceAccountId(init.getServiceAccountId())
-            .setServiceAccountPrivateKey(init.getServiceAccountPrivateKey())
-            .setServiceAccountScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH_QUERY))
-            .setServiceAccountUser(userToImpersonate)
-            .build();
-
-        CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds)
-            .setApplicationName("default") // Is the Application name relevant?
-            .build();
-
-        return service;
-    }
 
 
 } // end class

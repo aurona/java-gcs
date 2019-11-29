@@ -70,6 +70,7 @@
         <artifactId>google-api-services-docs</artifactId>
         <version>v1-rev20191010-1.30.3</version>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-cloudsearch -->
     <dependency>
         <groupId>com.google.apis</groupId>
@@ -100,6 +101,18 @@
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
       <version>1.2</version>
+    </dependency>
+
+    <!-- PHS: New google-auth-library for Credentials -->
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+      <version>0.18.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-appengine</artifactId>
+      <version>0.18.0</version>
     </dependency>
 
     <!-- For file upload to servlet -->

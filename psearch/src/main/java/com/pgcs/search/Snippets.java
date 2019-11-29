@@ -47,6 +47,65 @@
             schema = cloudSearch.getObjectParser().parseAndClose(br, Schema.class); 
         }
 
+        /* DWD proxy 
+        CloudSearch c = CloudSearchClient.getCloudSearchAPIService("domainuser@mydomain.com");
+        com.google.api.services.cloudsearch.v1.model.SearchRequest search = new com.google.api.services.cloudsearch.v1.model.SearchRequest();
+        search.setDataSourceRestrictions(request.getDataSourceRestrictions());
+        search.setFacetOptions(request.getFacetOptions());
+        search.setPageSize(request.getPageSize());
+        search.setQuery(request.getQuery());
+        search.setQueryInterpretationOptions(request.getQueryInterpretationOptions());
+        search.setRequestOptions(request.getRequestOptions());
+        search.setSortOptions(request.getSortOptions());
+        search.setStart(request.getStart());
+        RequestOptions opt = new RequestOptions();
+        opt.setSearchApplicationId("searchapplications/xxxxxxxxxxxxxxxxxxxxxx");
+        search.setQuery("comunicati");
+        search.setRequestOptions(opt);
+
+
+
+
+    public static CloudSearch getCloudSearchAPIServiceGAE(String userToImpersonate)
+        throws FileNotFoundException, IOException {
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE start: email: " + userToImpersonate);
+
+        // This does not work from AppEngine, only from Standalone Java: FileInputStream credsFile = new FileInputStream(SERVICE_ACCOUNT_FILE_PATH);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream credsFile = classLoader.getResourceAsStream(SERVICE_ACCOUNT_FILE_PATH); // File name does not have the initial '/'. It is the file name who would be stores in WEB-INF/classes
+        
+        GoogleCredential init = GoogleCredential.fromStream(credsFile);
+
+        HttpTransport httpTransport = init.getTransport();
+        JsonFactory jsonFactory = init.getJsonFactory();
+
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE file: " + credsFile.toString());
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE httpTransport: " + init.getTransport());
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE jsonFactory: " + init.getJsonFactory());
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE getServiceAccountId: " + init.getServiceAccountId());
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE getServiceAccountPrivateKey: " + init.getServiceAccountPrivateKey());
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE CloudSearchScopes.CLOUD_SEARCH: " + CloudSearchScopes.CLOUD_SEARCH);
+        GCSUtils.log("GCSSDK getCloudSearchAPIServiceGAE userEmail: " + userToImpersonate);
+
+        // PHS: New Google Auth Client library for AppEngine:
+        AppIdentityService appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
+
+        Credentials creds =
+            AppEngineCredentials.newBuilder()
+                .setScopes(Collections.singleton(CloudSearchScopes.CLOUD_SEARCH_QUERY))
+                .setAppIdentityService(appIdentityService)
+                .build();
+        
+        CloudSearch service = new CloudSearch.Builder(httpTransport, jsonFactory, creds)
+            .setApplicationName("psearch 1.0-SNAPSHOT") // Is the Application name relevant?
+            .build();
+
+        return service;
+    }
+
+
+
 
 
         */
