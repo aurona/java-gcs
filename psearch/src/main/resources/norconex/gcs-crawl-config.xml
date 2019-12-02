@@ -70,7 +70,7 @@
 
 					<tagger class="com.norconex.importer.handler.tagger.impl.KeepOnlyTagger" >
 						<!-- <fields>title,keywords,description,content,document.reference, document.contentType, collector.referrer-link-text</fields> -->
-						<fields>title,keywords,description</fields>
+						<fields>title,keywords,description,document.contentType</fields>
 					</tagger>
 
 					<tagger class="com.norconex.importer.handler.tagger.impl.ForceSingleValueTagger">
