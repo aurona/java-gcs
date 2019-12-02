@@ -1,77 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <!-- 
-   Copyright 2010-2017 Norconex Inc.
+	Copyright 2010-2017 Norconex Inc.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
 -->
 <!-- This configuration shows the minimum required and basic recommendations
-     to run a crawler.  
-     -->
+    to run a crawler.  
+-->
 <httpcollector id="GCS Config HTTP Collector">
 
-  <!-- Decide where to store generated files. -->
-  <progressDir>./examples-output/minimum/progress</progressDir>
-  <logsDir>./examples-output/minimum/logs</logsDir>
+	<!-- Decide where to store generated files. -->
+	<progressDir>./examples-output/lme/progress</progressDir>
+	<logsDir>./examples-output/lme/logs</logsDir>
 
-  <crawlers>
-    <crawler id="Norconex Minimum Test Page">
+	<crawlers>
+		<crawler id="Norconex Minimum Test Page">
 
-      <!-- Requires at least one start URL (or urlsFile). 
-           Optionally limit crawling to same protocol/domain/port as 
-           start URLs. -->
-      <startURLs stayOnDomain="true" stayOnPort="true" stayOnProtocol="true">
-        <url>https://www.norconex.com/product/collector-http-test/minimum.php</url>
-      </startURLs>
+			<!-- Requires at least one start URL (or urlsFile). 
+			Optionally limit crawling to same protocol/domain/port as 
+			start URLs. -->
+			<startURLs stayOnDomain="true" stayOnPort="true" stayOnProtocol="true">
+				<url>https://www.leroymerlin.es/</url>
+			</startURLs>
 
-      <!-- === Recommendations: ============================================ -->
+			<!-- === Recommendations: ============================================ -->
 
-      <!-- Specify a crawler default directory where to generate files. -->
-      <workDir>./examples-output/minimum</workDir>
+			<!-- Specify a crawler default directory where to generate files. -->
+			<workDir>./examples-output/lme</workDir>
 
-      <!-- Put a maximum depth to avoid infinite crawling (e.g. calendars). -->
-      <maxDepth>0</maxDepth>
+			<!-- Put a maximum depth to avoid infinite crawling (e.g. calendars). -->
+			<maxDepth>3</maxDepth>
+			<maxDocuments>10</maxDocuments>
 
-      <!-- We know we don't want to crawl the entire site, so ignore sitemap. -->
-      <sitemapResolverFactory ignore="true" />
+			<!-- We know we don't want to crawl the entire site, so ignore sitemap. -->
+			<sitemapResolverFactory ignore="true" />
 
-      <!-- Be as nice as you can to sites you crawl. -->
-      <delay default="5000" />
+			<!-- What to do with orphan documents.  Orphans are valid
+			documents, which on subsequent crawls can no longer be reached when
+			running the crawler (e.g. there are no links pointing to that page
+			anymore).  Available options are:
+			IGNORE (default), DELETE, and PROCESS.
+			-->
+			<orphansStrategy>DELETE</orphansStrategy>
+
+			<!-- Be as nice as you can to sites you crawl. -->
+			<delay default="100" />
       
-      <!-- Document importing -->
-      <importer>
-        <postParseHandlers>
-          <!-- If your target repository does not support arbitrary fields,
-               make sure you only keep the fields you need. -->
-          <tagger class="com.norconex.importer.handler.tagger.impl.KeepOnlyTagger">
-            <fields>title,keywords,description,document.reference</fields>
-          </tagger>
-        </postParseHandlers>
-      </importer> 
+			<!-- Document importing -->
+			<importer>
+				<preParseHandlers>
+					<tagger class="com.norconex.committer.googlecloudsearch.BinaryContentTagger"/>
+				</preParseHandlers>
+	  
+				<postParseHandlers>
+					<tagger class="com.norconex.importer.handler.tagger.impl.DebugTagger" logLevel="INFO" />
+					<!-- If your target repository does not support arbitrary fields,
+					make sure you only keep the fields you need. -->
+
+					<tagger class="com.norconex.importer.handler.tagger.impl.KeepOnlyTagger" >
+						<!-- <fields>title,keywords,description,content,document.reference, document.contentType, collector.referrer-link-text</fields> -->
+						<fields>title,keywords,description</fields>
+					</tagger>
+
+					<tagger class="com.norconex.importer.handler.tagger.impl.ForceSingleValueTagger">
+						<singleValue field="title" action="keepFirst"/>
+					</tagger>
+					
+					<tagger class="com.norconex.importer.handler.tagger.impl.RenameTagger">
+						<rename fromField="document.reference" toField="url" overwrite="true"/>
+						<rename fromField="document.contentType" toField="content_type" overwrite="true"/>
+					</tagger>
+								
+				</postParseHandlers>
+			</importer> 
       
-      <!-- PHS: GCS Committer -->
-	<committer class="com.norconex.committer.googlecloudsearch.GoogleCloudSearchCommitter">
-		<configFilePath>C:\Users\pablo\dev\norconex\norconex-collector-http-2.8.1\sdk-configuration.properties</configFilePath>
-		<!-- Optional, value="[raw|text]". Default value: raw -->
-		<uploadFormat>raw</uploadFormat>
-	</committer>
-	<importer>
-	  <preParseHandlers>
-		<tagger class="com.norconex.committer.googlecloudsearch.BinaryContentTagger"/>
-	  </preParseHandlers>
-	</importer>
-
-    </crawler>
-  </crawlers>
-
+			<!-- PHS: GCS Committer -->
+			<committer class="com.norconex.committer.googlecloudsearch.GoogleCloudSearchCommitter">
+				<configFilePath>C:\Users\pablo\dev\norconex\norconex-collector-http-2.8.1\sdk-configuration.properties</configFilePath>
+				<!-- Optional, value="[raw|text]". Default value: raw -->
+				<uploadFormat>raw</uploadFormat>
+			</committer>
+	  
+		</crawler>
+	</crawlers>
 </httpcollector>

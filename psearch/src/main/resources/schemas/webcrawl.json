@@ -1,0 +1,27 @@
+{
+    "objectDefinitions": [
+        {
+            "name": "webcrawl",
+            "propertyDefinitions": [
+                {
+                    "displayOptions": {
+                        "displayLabel": "contentType"
+                    },
+                    "isFacetable": false,
+                    "isRepeatable": true,
+                    "isReturnable": true,
+                    "isSortable": false,
+                    "isWildcardSearchable": false,
+                    "name": "contentType",
+                    "textPropertyOptions": {
+                        "operatorOptions": {
+                            "exactMatchWithOperator": false,
+                            "operatorName": "contentType"
+                        },
+                        "retrievalImportance": {}
+                    }
+                }
+            ]
+        }
+    ]
+}
